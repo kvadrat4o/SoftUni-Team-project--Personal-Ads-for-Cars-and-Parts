@@ -4,7 +4,7 @@ Team project for developing basic web app using C# backend and JS frontend
   1.1 Michael Stoyanov - https://github.com/maio246
   1.2 Radoslav Astardzhiev - https://github.com/RAstardzhiev
   1.3 Ivan Milanov - https://github.com/cecubebg
-  1.4 Stoyan Stoyanov - 
+  1.4 Stoyan Stoyanov - https://github.com/stoyan-stoyanvov93
   1.5 Dimitar vasilev - https://github.com/kvadrat4o
   1.6 Vladimir Valchev - the member dropped out at the beginning of the project.
  2. Basic project description
