@@ -14,6 +14,6 @@
         [MaxLength(CountryNameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<Town> Town { get; set; } = new HashSet<Town>();
+        public ICollection<Town> Towns { get; set; } = new HashSet<Town>();
     }
 }

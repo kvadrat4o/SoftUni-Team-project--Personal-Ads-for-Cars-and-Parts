@@ -25,7 +25,7 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SetAddressAsync(SetAddressViewModel model)
+        public async Task<IActionResult> SetAddress(SetAddressViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -33,9 +33,9 @@
             }
 
             var user = await this.userManager.GetUserAsync(User);
-            var isAddressSet = this.userService.SetAddress(user, model);
+            this.userService.SetAddress(user, model);
 
-            return RedirectToAction("");
+            return RedirectToAction("Details");
         }
     }
 }

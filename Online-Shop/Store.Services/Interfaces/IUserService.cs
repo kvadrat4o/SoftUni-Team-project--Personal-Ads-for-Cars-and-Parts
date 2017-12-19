@@ -6,6 +6,6 @@ namespace Store.Services.Interfaces
 {
     public interface IUserService
     {
-        object SetAddress(User user, SetAddressViewModel model);
+        void SetAddress(User user, SetAddressViewModel model);
     }
 }
