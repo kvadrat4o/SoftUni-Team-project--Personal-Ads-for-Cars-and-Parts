@@ -11,6 +11,8 @@
     using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
+    using Store.Services.Models;
+
 
     using System.Threading.Tasks;
     [Authorize]
@@ -215,6 +217,27 @@
             StatusMessage = "Your password has been set.";
 
             return RedirectToAction(nameof(SetPassword));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SetUserAddress()
+        {
+            var user = await userManager.GetUserAsync(User);
+
+            var model = new SetAddressViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetUserAddress(SetAddressViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(SetUserAddress));
         }
 
         [HttpGet]
