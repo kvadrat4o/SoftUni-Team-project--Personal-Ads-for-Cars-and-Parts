@@ -18,6 +18,11 @@
         [MaxLength(UserFirstAndLastNameMaxLength)]
         public string LastName { get; set; }
 
+        [Required]
+        [MinLength(UserUserNameMinLength)]
+        [MaxLength(UserUserNameMinLength)]
+        public override string UserName { get; set; }
+
         [Range(MoneyMinValue, MoneyMaxValue)]
         public decimal MoneyBalance { get; set; }
 

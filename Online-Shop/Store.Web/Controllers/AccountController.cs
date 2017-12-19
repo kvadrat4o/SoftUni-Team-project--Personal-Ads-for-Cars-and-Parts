@@ -214,7 +214,7 @@
             {
                 var user = new User
                 {
-                    UserName = model.Email, 
+                    UserName = model.Username, 
                     FirstName = model.FirstName, 
                     LastName = model.LastName,
                     Email = model.Email
