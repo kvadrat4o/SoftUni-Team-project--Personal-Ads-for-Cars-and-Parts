@@ -4,6 +4,8 @@
     {
         public const int UserFirstAndLastNameMinLength = 2;
         public const int UserFirstAndLastNameMaxLength = 30;
+        public const int UserUserNameMinLength = 3;
+        public const int UserUserNameMaxLength = 20;
 
         public const int ProductTitleMinLength = 20;
         public const int ProductTitleMaxLength = 130;
@@ -42,7 +44,12 @@
         public const double MoneyMinValue = 0.0;
         public const double MoneyMaxValue = double.MaxValue;
 
+        /* Administrator account data */
         public const string AdminRoleName = "Admin";
+        public const string AdminUsername = "AdminUsername";
+        public const string AdminFirstName = "AdminFirstName";
+        public const string AdminLastName = "AdminLastName";
         public const string AdminEmail = "admin@mysite.com";
+        public const string AdminPassword = "admin123";
     }
 }

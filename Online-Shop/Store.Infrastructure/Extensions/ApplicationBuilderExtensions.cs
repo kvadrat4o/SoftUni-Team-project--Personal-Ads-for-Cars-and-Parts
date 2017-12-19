@@ -22,7 +22,6 @@
                 Task
                     .Run(async () =>
                     {
-                        var adminName = ModelConstants.AdminRoleName;
 
                         var role = ModelConstants.AdminRoleName;
 
@@ -37,6 +36,8 @@
                         }
 
                         var adminEmail = ModelConstants.AdminEmail;
+                        var adminUsername = ModelConstants.AdminUsername;
+                        var adminPassword = ModelConstants.AdminPassword;
 
                         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -45,12 +46,12 @@
                             adminUser = new User
                             {
                                 Email = adminEmail,
-                                UserName = adminEmail,
-                                FirstName = adminEmail,
-                                LastName = adminEmail,
+                                UserName = adminUsername,
+                                FirstName = ModelConstants.AdminFirstName,
+                                LastName = ModelConstants.AdminLastName,
                             };
 
-                            await userManager.CreateAsync(adminUser, adminEmail);
+                            await userManager.CreateAsync(adminUser, adminPassword);
 
                             await userManager.AddToRoleAsync(adminUser, ModelConstants.AdminRoleName);
                         }
