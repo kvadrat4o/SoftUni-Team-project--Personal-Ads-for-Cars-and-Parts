@@ -1,6 +1,8 @@
 ﻿namespace Store.Services.Implementations
 {
+    using System.Security.Claims;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;

@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Store.Infrastructure\Store.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\UserViewModels\" />
+  </ItemGroup>
+
 </Project>

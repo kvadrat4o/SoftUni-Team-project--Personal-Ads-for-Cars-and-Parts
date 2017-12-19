@@ -18,6 +18,8 @@
 
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
         public DbSet<Discount> Discounts { get; set; }
 
         public DbSet<Feedback> Feedbacks { get; set; }
@@ -35,6 +37,7 @@
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new CarConfig());
+            builder.ApplyConfiguration(new CountryConfig());
             builder.ApplyConfiguration(new FeedbackConfig());
             builder.ApplyConfiguration(new InvoiceConfig());
             builder.ApplyConfiguration(new ProductConfig());

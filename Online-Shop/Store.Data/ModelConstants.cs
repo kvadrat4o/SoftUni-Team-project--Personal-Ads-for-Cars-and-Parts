@@ -35,6 +35,9 @@
         public const int CommentContentMinLength = 3;
         public const int CommentContentMaxLength = 100;
 
+        public const int CountryNameMinLength = 2;
+        public const int CountryNameMaxLength = 30;
+
         /* Shared Constants */
         public const double MoneyMinValue = 0.0;
         public const double MoneyMaxValue = double.MaxValue;

@@ -17,6 +17,9 @@
         [MaxLength(TownPostCodeMaxLength)]
         public string PostCode { get; set; }
 
+        public int CountryId { get; set; }
+        public Country Country { get; set; }
+
         public ICollection<Address> Addresses { get; set; } = new HashSet<Address>();
     }
 }

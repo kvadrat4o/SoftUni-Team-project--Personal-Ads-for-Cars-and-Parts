@@ -20,8 +20,18 @@
             this.userManager = userManager;
             this.productService = productService;
         }
+        
+        [Authorize]
+        public async Task<IActionResult> Create()
+        {
+            var user = await this.userManager.GetUserAsync(User);
+            if (user.AddressId == null)
+            {
+                return RedirectToAction("SetAddress", "User");
+            }
 
-        public IActionResult Create() => View();
+            return View();
+        }
 
         [HttpPost]
         [Authorize]
