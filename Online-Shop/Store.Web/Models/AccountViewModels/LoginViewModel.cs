@@ -5,8 +5,6 @@
     public class LoginViewModel
     {
         [Required]
-        //[MinLength(UserUserNameMinLength)]
-        //[MaxLength(UserUserNameMinLength)]
         public string Username { get; set; }
 
         [Required]

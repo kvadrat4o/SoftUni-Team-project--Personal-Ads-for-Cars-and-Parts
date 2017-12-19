@@ -27,6 +27,7 @@
             var user = await this.userManager.GetUserAsync(User);
             if (user.AddressId == null)
             {
+                TempData["ErrorMessage"] = "In order to post new product you need to set your address!";
                 return RedirectToAction("SetAddress", "User");
             }
 
