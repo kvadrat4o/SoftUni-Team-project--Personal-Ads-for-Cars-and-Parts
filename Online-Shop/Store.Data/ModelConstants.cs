@@ -27,7 +27,7 @@
         public const int TownPostCodeMaxLength = 10;
         
         public const int AddressStreetMinLength = 3;
-        public const int AddressStreetMaxLength = 50;
+        public const int AddressStreetMaxLength = 100;
         
         public const int CarMakeMinLength = 3;
         public const int CarMakeMaxLength = 30;

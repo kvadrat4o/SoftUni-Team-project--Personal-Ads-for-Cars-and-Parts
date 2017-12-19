@@ -14,21 +14,24 @@
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
         private StoreDbContext db;
+        private IAddressService addressService;
 
         public UserService(RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
-            StoreDbContext db)
+            StoreDbContext db,
+            IAddressService addressService)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.db = db;
+            this.addressService = addressService;
         }
 
-        public object SetAddress(User user, SetAddressViewModel model)
+        public void SetAddress(User user, SetAddressViewModel model)
         {
-            var country = this.db.Countries
-                .FirstOrDefault(c => c.Name.Equals(model.CountryName, StringComparison.OrdinalIgnoreCase));
-            return null;
+            var address = this.addressService.GetAddress(model);
+            user.Address = address;
+            this.db.SaveChanges();
         }
     }
 }
