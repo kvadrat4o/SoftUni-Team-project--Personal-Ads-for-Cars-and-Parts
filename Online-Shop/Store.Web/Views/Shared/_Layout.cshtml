@@ -39,7 +39,8 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content" >
+    <div class="container body-content">
+        @await Html.PartialAsync("_Messages")
         @RenderBody()
         <hr />
         <footer>

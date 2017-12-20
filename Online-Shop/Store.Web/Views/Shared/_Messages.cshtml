@@ -1,0 +1,24 @@
+﻿@if (TempData.ContainsKey(WebConstants.SuccessMessageKey))
+{
+    <div class="alert alert-success text-center">
+        <b>Success! </b>@TempData[WebConstants.SuccessMessageKey]
+    </div>
+}
+else if (TempData.ContainsKey(WebConstants.InfoMessageKey))
+{
+    <div class="alert alert-info text-center">
+        <b>Info! </b>@TempData[WebConstants.InfoMessageKey]
+    </div>
+}
+else if (TempData.ContainsKey(WebConstants.WarningMessageKey))
+{
+    <div class="alert alert-warning text-center">
+        <b>Attention! </b>@TempData[WebConstants.WarningMessageKey]
+    </div>
+}
+else if (TempData.ContainsKey(WebConstants.Danger))
+{
+    <div class="alert alert-danger text-center">
+        <b>Warning! </b>@TempData[WebConstants.Danger]
+    </div>
+}
