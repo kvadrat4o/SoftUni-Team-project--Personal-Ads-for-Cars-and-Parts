@@ -13,13 +13,15 @@ namespace Store.Web.Views.Manage
 
         public static string Index => "Index";
 
+        public static string SetAddress => "SetAddress";
+
         public static string ChangePassword => "ChangePassword";
 
         public static string ExternalLogins => "ExternalLogins";
 
-        public static string SetUserAddress => "SetUserAddress";
-
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
+
+        public static string SetAddressNavClass(ViewContext viewContext) => PageNavClass(viewContext, SetAddress);
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 

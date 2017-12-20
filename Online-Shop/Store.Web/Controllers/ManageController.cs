@@ -13,8 +13,9 @@
     using System.Text.Encodings.Web;
     using Store.Services.Models;
 
-
     using System.Threading.Tasks;
+    using Store.Services.Implementations;
+
     [Authorize]
     [Route("[controller]/[action]")]
     public class ManageController : Controller
@@ -219,25 +220,21 @@
             return RedirectToAction(nameof(SetPassword));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> SetUserAddress()
-        {
-            var user = await userManager.GetUserAsync(User);
-
-            var model = new SetAddressViewModel();
-            return View(model);
-        }
+        [Authorize]
+        public IActionResult SetAddress() => View();
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetUserAddress(SetAddressViewModel model)
+        [Authorize]
+        public async Task<IActionResult> SetAddress(SetAddressViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            return RedirectToAction(nameof(SetUserAddress));
+            var user = await this.userManager.GetUserAsync(User);
+            //this.userService.SetAddress(user, model);
+            return RedirectToAction("Manage", "Index");
         }
 
         [HttpGet]
