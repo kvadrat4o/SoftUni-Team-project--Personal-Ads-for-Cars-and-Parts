@@ -15,6 +15,7 @@
 
     using System.Threading.Tasks;
     using Store.Services.Implementations;
+    using Store.Services.Interfaces;
 
     [Authorize]
     [Route("[controller]/[action]")]
@@ -24,6 +25,7 @@
         private readonly SignInManager<User> signInManager;
         private readonly ILogger logger;
         private readonly UrlEncoder urlEncoder;
+        private readonly IUserService userService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -31,12 +33,14 @@
           UserManager<User> userManager,
           SignInManager<User> signInManager,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.urlEncoder = urlEncoder;
+            this.userService = userService;
         }
 
         [TempData]
@@ -220,11 +224,9 @@
             return RedirectToAction(nameof(SetPassword));
         }
 
-        [Authorize]
         public IActionResult SetAddress() => View();
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> SetAddress(SetAddressViewModel model)
         {
             if (!ModelState.IsValid)
@@ -233,8 +235,8 @@
             }
 
             var user = await this.userManager.GetUserAsync(User);
-            //this.userService.SetAddress(user, model);
-            return RedirectToAction("Manage", "Index");
+            this.userService.SetAddress(user, model);
+            return RedirectToAction("Index", "Manage");
         }
 
         [HttpGet]
