@@ -236,6 +236,8 @@
 
             var user = await this.userManager.GetUserAsync(User);
             this.userService.SetAddress(user, model);
+
+            TempData[WebConstants.SuccessMessageKey] = "Your address is set.";
             return RedirectToAction("Index", "Manage");
         }
 
