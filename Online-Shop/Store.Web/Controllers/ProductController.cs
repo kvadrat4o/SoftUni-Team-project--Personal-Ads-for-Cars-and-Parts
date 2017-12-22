@@ -53,7 +53,9 @@
                 return View(model);
             }
 
-            return RedirectToAction("Index", "Home");
+            TempData[WebConstants.SuccessMessageKey] = $"Product {model.Title} is successfully created.";
+
+            return RedirectToAction("Details", new { title = model.Title });
         }
 
         [HttpGet]
