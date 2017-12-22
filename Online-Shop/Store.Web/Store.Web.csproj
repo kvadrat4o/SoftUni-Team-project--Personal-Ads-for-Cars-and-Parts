@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-Store.Web-ECEF7BED-DB0B-4B12-BFCE-E92D13114E19</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="WebConstants.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
@@ -24,10 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Store.Data\Store.Data.csproj" />
     <ProjectReference Include="..\Store.Infrastructure\Store.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\UserViewModels\" />
   </ItemGroup>
 
 </Project>

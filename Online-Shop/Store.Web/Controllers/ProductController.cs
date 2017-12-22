@@ -4,21 +4,27 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
     using Store.Web.Models.ProductViewModels;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class ProductController : Controller
     {
         private IProductService productService;
         private UserManager<User> userManager;
+        private StoreDbContext db;
 
         public ProductController(UserManager<User> userManager, 
-            IProductService productService)
+            IProductService productService,
+            StoreDbContext db)
         {
             this.userManager = userManager;
             this.productService = productService;
+            this.db = db;
         }
         
         [Authorize]
@@ -50,6 +56,20 @@
             this.productService.Create(product);
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Details(string title)
+        {
+            var product = await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var mapped = Mapper.Map<ProductDetailsViewModel>(product);
+
+            return View(nameof(Details), mapped);
         }
     }
 }

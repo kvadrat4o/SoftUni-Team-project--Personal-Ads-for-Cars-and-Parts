@@ -1,0 +1,18 @@
+﻿@model  ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Product: @Model.Title</h2>
+<br />
+<h3>PartNumber: @Model.PartNumber</h3>
+<br />
+<h4>Descrioption:</h4>
+<br />
+<h4>@Model.Description</h4>
+<br />
+<br />
+<h4>Quantity: @Model.Quantity</h4>
+<br />
+<h4>$@Model.Price per piece</h4>

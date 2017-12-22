@@ -7,7 +7,7 @@
         public const int UserUserNameMinLength = 3;
         public const int UserUserNameMaxLength = 20;
 
-        public const int ProductTitleMinLength = 20;
+        public const int ProductTitleMinLength = 10;
         public const int ProductTitleMaxLength = 130;
         public const int ProductDescriptionMaxLength = 500;
         public const int ProductPicturePathMaxLength = 100;

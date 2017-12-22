@@ -1,0 +1,21 @@
+﻿@model UserProductsListViewModel
+
+@{
+    ViewData["Title"] = "All products for sale.";
+}
+
+<h2>@Model.UserName products for sale:</h2>
+
+    @if (Model.ProductsToSell.Count() != 0)
+    {
+        <ul>
+            @foreach (var item in Model.ProductsToSell)
+            {
+            <li>@item.Title</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h2>No products for sale.</h2>
+    }
