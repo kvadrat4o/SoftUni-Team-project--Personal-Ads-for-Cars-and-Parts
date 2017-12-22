@@ -40,21 +40,16 @@
         [Authorize]
         public async Task<IActionResult> Create(CreateProductViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             model.Title = model.Title.Trim();
             var product = Mapper.Map<Product>(model);
 
             var sellerId = this.userManager.GetUserId(User);
             product.SellerId = sellerId;
 
-            var creatingErrorMessage = await this.productService.CreateAsync(product);
-            if (creatingErrorMessage != null)
+            var creationMessage = await this.productService.CreateAsync(product);
+            if (creationMessage != null)
             {
-                TempData[WebConstants.WarningMessageKey] = creatingErrorMessage;
+                TempData[WebConstants.WarningMessageKey] = creationMessage;
                 return View(model);
             }
 

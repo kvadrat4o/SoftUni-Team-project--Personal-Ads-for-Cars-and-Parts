@@ -13,9 +13,11 @@
 
     public class ValidateModelStateAttribute : ActionFilterAttribute
     {
+        private const string HttpPostMethod = "POST";
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (context.HttpContext.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            if (context.HttpContext.Request.Method.Equals(HttpPostMethod, StringComparison.OrdinalIgnoreCase))
             {
                 if (!context.ModelState.IsValid)
                 {
