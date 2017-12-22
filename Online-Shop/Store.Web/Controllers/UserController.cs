@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Services.Models;
+    using Store.Services.Models.AddressViewModels;
     using System.Threading.Tasks;
 
     public class UserController : Controller
@@ -27,11 +27,6 @@
         [Authorize]
         public async Task<IActionResult> SetAddress(SetAddressViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var user = await this.userManager.GetUserAsync(User);
             this.userService.SetAddress(user, model);
 

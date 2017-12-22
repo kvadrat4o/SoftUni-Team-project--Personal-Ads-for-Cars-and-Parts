@@ -4,8 +4,8 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Services.Models;
     using System.Linq;
+    using Store.Services.Models.AddressViewModels;
 
     public class AddressService : IAddressService
     {

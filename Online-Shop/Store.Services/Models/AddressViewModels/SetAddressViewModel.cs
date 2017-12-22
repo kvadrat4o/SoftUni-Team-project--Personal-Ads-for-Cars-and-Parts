@@ -1,4 +1,4 @@
-﻿namespace Store.Services.Models
+﻿namespace Store.Services.Models.AddressViewModels
 {
     using System.ComponentModel.DataAnnotations;
 

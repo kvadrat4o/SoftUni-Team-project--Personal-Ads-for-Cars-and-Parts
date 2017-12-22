@@ -6,16 +6,14 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Store.Data.Models;
+    using Store.Services.Interfaces;
+    using Store.Services.Models.AddressViewModels;
     using Store.Web.Models.ManageViewModels;
     using System;
     using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
-    using Store.Services.Models;
-
     using System.Threading.Tasks;
-    using Store.Services.Implementations;
-    using Store.Services.Interfaces;
 
     [Authorize]
     [Route("[controller]/[action]")]

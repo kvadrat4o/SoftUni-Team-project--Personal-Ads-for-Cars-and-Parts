@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Web.Models.ProductViewModels;
+    using Store.Services.Models.ProductViewModels;
     using System.Threading.Tasks;
 
     public class ProductController : Controller
@@ -38,11 +38,6 @@
         [Authorize]
         public IActionResult Create(CreateProductViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var product = Mapper.Map<Product>(model);
 
             var sellerId = this.userManager.GetUserId(User);

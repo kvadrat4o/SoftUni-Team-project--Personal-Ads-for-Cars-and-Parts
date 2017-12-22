@@ -1,4 +1,4 @@
-﻿namespace Store.Infrastructure.Mapping.Interfaces
+﻿namespace Store.Helpers.Mapping.Interfaces
 {
     using AutoMapper;
 

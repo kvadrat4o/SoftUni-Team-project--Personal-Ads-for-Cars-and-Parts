@@ -1,13 +1,10 @@
 ﻿namespace Store.Services.Implementations
 {
-    using System;
-    using System.Linq;
-    using System.Security.Claims;
     using Microsoft.AspNetCore.Identity;
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Services.Models;
+    using Store.Services.Models.AddressViewModels;
 
     public class UserService : IUserService
     {
