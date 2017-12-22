@@ -53,7 +53,7 @@
             var user = await userManager.GetUserAsync(User);
             var products = db.Products.Where(p => p.Seller.UserName.Equals(user.UserName));
 
-            var mappedProducts = Mapper.Map<ProductDetailsViewModel[]>(products);
+            var mappedProducts = Mapper.Map<DetailsProductViewModel[]>(products);
             var productsToShow = new UserProductsListViewModel
             {
                 UserName = user.UserName,

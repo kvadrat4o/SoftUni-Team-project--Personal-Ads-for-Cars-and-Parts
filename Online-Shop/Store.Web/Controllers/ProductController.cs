@@ -58,6 +58,29 @@
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult Edit() => View();
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(string title)
+        {
+            var productToEdit = await this.productService.GetProduct(title);
+
+            return View("Details");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete (string title)
+        {
+            var productToDelete = await this.productService.GetProduct(title);
+            this.productService.Delete(productToDelete);
+
+            TempData[WebConstants.SuccessMessageKey] = $"Product {title} was succcesfully deleted.";
+
+            return RedirectToAction("AllProducts", "User");
+        }
+
         public async Task<IActionResult> Details(string title)
         {
             var product = await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
@@ -67,7 +90,7 @@
                 return NotFound();
             }
 
-            var mapped = Mapper.Map<ProductDetailsViewModel>(product);
+            var mapped = Mapper.Map<DetailsProductViewModel>(product);
 
             return View(nameof(Details), mapped);
         }

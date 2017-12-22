@@ -5,8 +5,10 @@
 
     public class UserProductsListViewModel
     {
+        public int Id { get; set; }
+
         public string UserName { get; set; }
 
-        public ICollection<ProductDetailsViewModel> ProductsToSell { get; set; }
+        public ICollection<DetailsProductViewModel> ProductsToSell { get; set; }
     }
 }

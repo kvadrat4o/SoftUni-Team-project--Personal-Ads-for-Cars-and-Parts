@@ -6,16 +6,28 @@
 
 <h2>@Model.UserName products for sale:</h2>
 
-    @if (Model.ProductsToSell.Count() != 0)
-    {
-        <ul>
-            @foreach (var item in Model.ProductsToSell)
-            {
-            <li>@item.Title</li>
-            }
-        </ul>
-    }
-    else
-    {
-        <h2>No products for sale.</h2>
-    }
+@if (Model.ProductsToSell.Count() != 0)
+{
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.ProductsToSell)
+        {
+            <tr>
+                <th>@item.Title</th>
+                <th>@item.Quantity</th>
+                <th>
+                    <a href="~/Product/Details?title=@item.Title" class="btn btn-default">Details</a>
+                    <a href="~/Product/Delete?title=@item.Title" class="btn btn-danger">Delete</a>
+                </th>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h2>No products for sale.</h2>
+}

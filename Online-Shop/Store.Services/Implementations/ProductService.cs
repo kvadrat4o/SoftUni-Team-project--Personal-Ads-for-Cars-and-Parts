@@ -6,6 +6,8 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class ProductService : IProductService
     {
@@ -23,6 +25,18 @@
         {
             db.Products.Add(product);
             db.SaveChanges();
+        }
+
+        public void Delete(Product product)
+        {
+            db.Products.Remove(product);
+            db.SaveChanges();
+        }
+
+        public async Task<Product> GetProduct(string title)
+        {
+            var product = await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
+            return product;
         }
     }
 }
