@@ -11,6 +11,7 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Infrastructure.Extensions;
+    using Store.Infrastructure.Filters;
 
     public class Startup
     {
@@ -44,6 +45,7 @@
             services.AddMvc(options =>
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                options.Filters.Add<ValidateModelStateAttribute>();
             });
         }
 

@@ -1,9 +1,10 @@
-﻿namespace Store.Web.Models.ProductViewModels
+﻿namespace Store.Services.Models.ProductViewModels
 {
     using Store.Data.Models;
     using Store.Data.Models.Enums;
-    using Store.Infrastructure.Mapping.Interfaces;
+    using Store.Helpers.Mapping.Interfaces;
     using System.ComponentModel.DataAnnotations;
+
     using static Store.Data.ModelConstants;
 
     public class CreateProductViewModel : IMapFrom<Product>

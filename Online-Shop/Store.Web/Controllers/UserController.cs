@@ -1,4 +1,4 @@
-﻿namespace Store.Web.Controllers
+﻿﻿namespace Store.Web.Controllers
 {
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,7 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Services.Models;
+    using Store.Services.Models.AddressViewModels;
     using Store.Web.Models.UserViewModels;
     using Store.Web.Models.ProductViewModels;
     using System.Linq;
@@ -18,6 +18,7 @@
         private IUserService userService;
         private readonly UserManager<User> userManager;
         private readonly StoreDbContext db;
+
 
         public UserController(UserManager<User> userManager,
             IUserService userService,
@@ -36,11 +37,6 @@
         [Authorize]
         public async Task<IActionResult> SetAddress(SetAddressViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var user = await this.userManager.GetUserAsync(User);
             this.userService.SetAddress(user, model);
 

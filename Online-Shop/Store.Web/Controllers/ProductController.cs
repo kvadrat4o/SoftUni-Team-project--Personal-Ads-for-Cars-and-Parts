@@ -8,23 +8,20 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
+    using Store.Services.Models.ProductViewModels;
     using Store.Web.Models.ProductViewModels;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class ProductController : Controller
     {
         private IProductService productService;
         private UserManager<User> userManager;
-        private StoreDbContext db;
 
         public ProductController(UserManager<User> userManager, 
-            IProductService productService,
-            StoreDbContext db)
+            IProductService productService)
         {
             this.userManager = userManager;
             this.productService = productService;
-            this.db = db;
         }
         
         [Authorize]
@@ -83,7 +80,7 @@
 
         public async Task<IActionResult> Details(string title)
         {
-            var product = await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
+            var product = await this.productService.GetProduct(title);
 
             if (product == null)
             {
