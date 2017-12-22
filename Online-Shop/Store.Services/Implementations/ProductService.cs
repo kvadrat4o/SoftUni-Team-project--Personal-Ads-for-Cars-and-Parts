@@ -8,6 +8,7 @@
     using Store.Services.Interfaces;
     using System.Linq;
     using System.Threading.Tasks;
+    using System;
 
     public class ProductService : IProductService
     {
@@ -21,10 +22,19 @@
             this.userManager = userManager;
         }
 
-        public void Create(Product product)
+        public async Task<string> CreateAsync(Product product)
         {
-            db.Products.Add(product);
-            db.SaveChanges();
+            var existingProduct = await this.db.Products
+                .FirstOrDefaultAsync(p => p.Title.Equals(product.Title, StringComparison.OrdinalIgnoreCase));
+            if (existingProduct != null)
+            {
+                return $"Already there is a product with Title: {product.Title}";
+            }
+
+            this.db.Products.Add(product);
+            this.db.SaveChanges();
+
+            return null;
         }
 
         public void Delete(Product product)

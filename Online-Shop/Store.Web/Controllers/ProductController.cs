@@ -8,7 +8,6 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Services.Models.ProductViewModels;
     using Store.Web.Models.ProductViewModels;
     using System.Threading.Tasks;
 
@@ -39,18 +38,25 @@
 
         [HttpPost]
         [Authorize]
-        public IActionResult Create(CreateProductViewModel model)
+        public async Task<IActionResult> Create(CreateProductViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+            model.Title = model.Title.Trim();
             var product = Mapper.Map<Product>(model);
 
             var sellerId = this.userManager.GetUserId(User);
             product.SellerId = sellerId;
-            this.productService.Create(product);
+
+            var creatingErrorMessage = await this.productService.CreateAsync(product);
+            if (creatingErrorMessage != null)
+            {
+                TempData[WebConstants.WarningMessageKey] = creatingErrorMessage;
+                return View(model);
+            }
 
             return RedirectToAction("Index", "Home");
         }

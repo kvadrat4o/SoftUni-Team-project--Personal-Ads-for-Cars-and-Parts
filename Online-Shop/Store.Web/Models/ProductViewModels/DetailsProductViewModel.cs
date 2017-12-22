@@ -1,8 +1,9 @@
 ﻿namespace Store.Web.Models.ProductViewModels
 {
     using Data.Models.Enums;
-    using static Data.ModelConstants;
     using System.ComponentModel.DataAnnotations;
+
+    using static Data.ModelConstants;
 
     public class DetailsProductViewModel
     {

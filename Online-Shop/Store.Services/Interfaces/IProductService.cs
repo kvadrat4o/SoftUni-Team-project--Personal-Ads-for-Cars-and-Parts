@@ -5,7 +5,7 @@
 
     public interface IProductService
     {
-        void Create(Product product);
+        Task<string> CreateAsync(Product product);
 
         void Delete(Product product);
         
