@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="WebConstants.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="Models\UserViewModels\**" />
     <Content Remove="Models\UserViewModels\**" />
     <EmbeddedResource Remove="Models\UserViewModels\**" />
