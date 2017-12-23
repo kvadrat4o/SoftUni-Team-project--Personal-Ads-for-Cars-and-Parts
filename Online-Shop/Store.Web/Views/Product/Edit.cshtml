@@ -1,0 +1,46 @@
+﻿@model EditProductViewModel
+@{
+    ViewData["Title"] = "Edit product";
+}
+
+<div class="row">
+    <div>
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+            <h3>Edit product</h3>
+            <hr />
+            <input type="hidden" asp-for="Title" value="@Model.Title" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PicturePath"></label>
+                <input asp-for="PicturePath" class="form-control" />
+                <span asp-validation-for="PicturePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PartNumber"></label>
+                <input asp-for="PartNumber" class="form-control" />
+                <span asp-validation-for="PartNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input type="number" asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category"></label>
+                <select name="Categories" asp-items="@Html.GetEnumSelectList<Category>()"></select>
+            </div>
+            <button type="submit" class="btn btn-default">Edit</button>
+        </form>
+    </div>
+</div>
+

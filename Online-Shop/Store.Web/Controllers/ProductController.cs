@@ -8,6 +8,7 @@
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
+    using Store.Services.Models.ProductViewModels;
     using Store.Web.Models.ProductViewModels;
     using System.Threading.Tasks;
 
@@ -58,16 +59,23 @@
             return RedirectToAction("Details", new { title = model.Title });
         }
 
-        [HttpGet]
-        public IActionResult Edit() => View();
-
-        [Authorize]
-        [HttpPost]
         public async Task<IActionResult> Edit(string title)
         {
-            var productToEdit = await this.productService.GetProduct(title);
+            var product = await this.productService.GetProduct(title);
+            var mappedProduct = Mapper.Map<EditProductViewModel>(product);
 
-            return View("Details");
+            return View(mappedProduct);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditProductViewModel model)
+        {
+            var finalProduct = await this.productService.Edit(model.Title, model);
+            var mappedProduct = Mapper.Map<DetailsProductViewModel>(finalProduct);
+
+            return View("Details", mappedProduct);
         }
 
         [Authorize]

@@ -1,7 +1,8 @@
 ﻿namespace Store.Services.Interfaces
 {
-    using Store.Data.Models;
     using System.Threading.Tasks;
+    using Store.Data.Models;
+    using Store.Services.Models.ProductViewModels;
 
     public interface IProductService
     {
@@ -10,5 +11,7 @@
         void Delete(Product product);
         
         Task<Product> GetProduct(string title);
+
+        Task<Product> Edit(string oldProductTitle, EditProductViewModel newProductData);
     }
 }

@@ -7,6 +7,7 @@
     using Store.Services.Interfaces;
     using System;
     using System.Threading.Tasks;
+    using Store.Services.Models.ProductViewModels;
 
     public class ProductService : IProductService
     {
@@ -26,13 +27,13 @@
                 .FirstOrDefaultAsync(p => p.Title.Equals(product.Title, StringComparison.OrdinalIgnoreCase));
             if (existingProduct != null)
             {
-                return $"Already there is a product with Title: {product.Title}";
+                return $"There is already a product with that title: {product.Title}";
             }
 
             var isTaxPayed = await this.TryPayTaxAsync(product.SellerId);
             if (!isTaxPayed)
             {
-                return $"You have not enough mopney to publish a product! Please charge your account.";
+                return $"You don't have enough money to publish a product! Please charge your account.";
             }
 
             this.db.Products.Add(product);
@@ -56,6 +57,15 @@
         private async Task<bool> TryPayTaxAsync(string sellerId)
         {
             var seller = await this.db.Users.FindAsync(sellerId);
+            var sellerRoles = await this.userManager.GetRolesAsync(seller);
+
+            var isSellerAdmin = sellerRoles.Contains(ModelConstants.AdminRoleName);
+
+            if (isSellerAdmin)
+            {
+                return true;
+            }
+
             if (seller.MoneyBalance < ServiceConstants.ProductListingPriceTax)
             {
                 return false;
@@ -65,6 +75,31 @@
             await db.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<Product> Edit(string oldProductTitle, EditProductViewModel newProductData)
+        {
+            var productToEdit = await this.GetProduct(oldProductTitle);
+
+            if (newProductData.PicturePath != null)
+            {
+                productToEdit.PicturePath = newProductData.PicturePath;
+            }
+            if (newProductData.PartNumber != null)
+            {
+                productToEdit.PartNumber = newProductData.PartNumber;
+            }
+            if (newProductData.Description != null)
+            {
+                productToEdit.Description = newProductData.Description;
+            }
+
+            productToEdit.Price = newProductData.Price;
+            productToEdit.Quantity = newProductData.Quantity;
+
+            await db.SaveChangesAsync();
+
+            return productToEdit;
         }
     }
 }

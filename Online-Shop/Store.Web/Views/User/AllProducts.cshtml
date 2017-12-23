@@ -20,7 +20,8 @@
                 <th>@item.Title</th>
                 <th>@item.Quantity</th>
                 <th>
-                    <a href="~/Product/Details?title=@item.Title" class="btn btn-default">Details</a>
+                    <a href="~/Product/Edit?title=@item.Title" class="btn btn-warning">Edit</a>
+                    <a href="~/Product/Details?title=@item.Title" class="btn btn-primary">Details</a>
                     <a href="~/Product/Delete?title=@item.Title" class="btn btn-danger">Delete</a>
                 </th>
             </tr>
