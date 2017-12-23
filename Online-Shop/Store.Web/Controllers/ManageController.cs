@@ -174,6 +174,8 @@
             return RedirectToAction(nameof(ChangePassword));
         }
 
+        public IActionResult ChangePicture() => View();
+
         [HttpGet]
         public async Task<IActionResult> SetPassword()
         {
