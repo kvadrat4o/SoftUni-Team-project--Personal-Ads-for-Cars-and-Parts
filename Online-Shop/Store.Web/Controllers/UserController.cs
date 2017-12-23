@@ -35,7 +35,7 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SetAddress(SetAddressViewModel model)
+        public async Task<IActionResult> SetAddress(AddressViewModel model)
         {
             var user = await this.userManager.GetUserAsync(User);
             this.userService.SetAddress(user, model);
@@ -57,6 +57,23 @@
             };
 
             return View(nameof(AllProducts), productsToShow);
+        }
+
+        public IActionResult Details(string userId = null)
+        {
+            if (userId == null)
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return BadRequest();
+                }
+
+                userId = this.userManager.GetUserId(User);
+            }
+
+            var model = this.userService.GetUserDetailsModel(userId);
+
+            return View(model);
         }
     }
 }

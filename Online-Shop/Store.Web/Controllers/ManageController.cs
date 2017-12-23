@@ -225,7 +225,7 @@
         public IActionResult SetAddress() => View();
 
         [HttpPost]
-        public async Task<IActionResult> SetAddress(SetAddressViewModel model)
+        public async Task<IActionResult> SetAddress(AddressViewModel model)
         {
             if (!ModelState.IsValid)
             {

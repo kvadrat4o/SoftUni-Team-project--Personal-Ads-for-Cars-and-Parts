@@ -1,0 +1,27 @@
+﻿@model UserDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Username} details";
+}
+
+<h2>@Model.Username</h2>
+
+<div>
+    <p><b>Name</b></p>
+    <p>@Model.FirstName @Model.LastName</p>
+</div>
+
+@if (Model.Address != null)
+{
+    <div>
+        <p><b>Address</b></p>
+        <p>@Model.Address.Street</p>
+        <p>@Model.Address.TownName</p>
+        <p>@Model.Address.PostCode</p>
+        <p>@Model.Address.CountryName</p>
+    </div>
+}
+
+<div>
+    <p><b>Sold items:</b> @Model.SoldItemsCount</p>
+</div>

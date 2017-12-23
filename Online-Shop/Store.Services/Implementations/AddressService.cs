@@ -16,7 +16,7 @@
             this.db = db;
         }
 
-        public Address GetAddress(SetAddressViewModel model)
+        public Address GetAddress(AddressViewModel model)
         {
             var country = this.GetCountry(model.CountryName);
             var town = this.GetTown(model.TownName);

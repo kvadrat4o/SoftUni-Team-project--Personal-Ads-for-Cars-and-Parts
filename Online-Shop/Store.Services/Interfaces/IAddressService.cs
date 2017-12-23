@@ -5,6 +5,6 @@
 
     public interface IAddressService
     {
-        Address GetAddress(SetAddressViewModel model);
+        Address GetAddress(AddressViewModel model);
     }
 }

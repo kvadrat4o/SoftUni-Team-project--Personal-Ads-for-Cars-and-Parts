@@ -4,7 +4,7 @@
 
     using static Store.Data.ModelConstants;
 
-    public class SetAddressViewModel
+    public class AddressViewModel
     {
         [Required]
         [MinLength(CountryNameMinLength)]
