@@ -203,13 +203,18 @@
                 return View();
             }
 
-            //if (!this.imageService.IsValidImage())
-            //{
-            //    return BadRequest();
-            //}
-
             var username = this.userManager.GetUserName(User);
-            var picturePath = await this.imageService.SaveImageAsync(image, username, username);
+            var picturePath = string.Empty;
+
+            try
+            {
+                picturePath = await this.imageService.SaveImageAsync(image, username, username);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                TempData[WebConstants.DangerMessageKey] = ioe.Message;
+                return View();
+            }
 
             await this.userService.SetAvatar(picturePath, userId);
 
