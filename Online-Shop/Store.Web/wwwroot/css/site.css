@@ -9,7 +9,7 @@
     border: 2px, dashed #ccc;
     color: #ccc;
     line-height: 200px;
-    text-align: center;
+    align-content:center;
     font-family: Arial, sans-serif;
 }
 
@@ -33,9 +33,9 @@
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
+/*.carousel-inner .item img[src$=".svg"] {
     width: 100%;
-}
+}*/
 
 /* QR code generator */
 #qrCode {
