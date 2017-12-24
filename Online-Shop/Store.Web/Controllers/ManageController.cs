@@ -180,11 +180,12 @@
 
             return RedirectToAction(nameof(ChangePassword));
         }
+
         [HttpGet]
         public IActionResult ChangePicture() => View();
 
         [HttpPost]
-        public async Task<IActionResult> ChangePicture(/*IFormFile file, */string url)
+        public async Task<IActionResult> ChangePicture(string url)
         {
             var userId = this.userManager.GetUserId(User);
 
@@ -196,21 +197,23 @@
 
             var image = Request.Form.Files[0];
 
-            if (image != null)
+            var username = this.userManager.GetUserName(User);
+            var picturePath = string.Empty;
+
+            try
             {
-                var username = this.userManager.GetUserName(User);
-                var picturePath = await this.imageService.SaveImageAsync(image, username, username);
+                picturePath = await this.imageService.SaveImageAsync(image, username, username);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                TempData[WebConstants.DangerMessageKey] = ioe.Message;
+                return View();
+            }
 
                 await this.userService.SetAvatar(picturePath, userId);
 
                 return RedirectToAction("Details", "User");
             }
-            else
-            {
-                TempData[WebConstants.DangerMessageKey] = "Something went wrong!";
-                return View();
-            }
-        }
 
         [HttpGet]
         public async Task<IActionResult> SetPassword()
@@ -341,7 +344,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
         {
-            var user = await userManager.GetUserAsync(User);
+            var user = await this.userManager.GetUserAsync(User);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
