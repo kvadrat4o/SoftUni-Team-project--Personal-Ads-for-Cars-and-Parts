@@ -18,6 +18,9 @@
         [MaxLength(UserFirstAndLastNameMaxLength)]
         public string LastName { get; set; }
 
+        [MaxLength(UserAvatarPathMaxLength)]
+        public string Avatar { get; set; } = UserDefaultAvatarPath;
+
         [Range(MoneyMinValue, MoneyMaxValue)]
         public decimal MoneyBalance { get; set; }
 
@@ -30,7 +33,9 @@
 
         public ICollection<Invoice> BoughtInvoices { get; set; } = new HashSet<Invoice>();
 
-        public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
+        public ICollection<Feedback> SentFeedbacks { get; set; } = new HashSet<Feedback>();
+
+        public ICollection<Feedback> ReceivedFeedbacks { get; set; } = new HashSet<Feedback>();
 
         public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
     }

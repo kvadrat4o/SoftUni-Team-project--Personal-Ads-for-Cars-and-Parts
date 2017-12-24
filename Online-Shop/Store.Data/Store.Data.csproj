@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Migrations\20171218185349_Initial.cs" />
+    <Compile Remove="Migrations\20171218212246_AddUserProperties.cs" />
+    <Compile Remove="Migrations\20171218213137_ProductPictureAdded.cs" />
+    <Compile Remove="Migrations\20171219085903_UserAddress.cs" />
+    <Compile Remove="Migrations\20171219130543_AddCountries.cs" />
+    <Compile Remove="Migrations\20171219145043_AddressStreetMaxLength.cs" />
+    <Compile Remove="Migrations\20171223215811_Initial.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
   </ItemGroup>

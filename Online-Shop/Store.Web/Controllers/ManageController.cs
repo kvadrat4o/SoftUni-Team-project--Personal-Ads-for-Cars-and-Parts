@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@
         private readonly ILogger logger;
         private readonly UrlEncoder urlEncoder;
         private readonly IUserService userService;
+        private readonly IImageService imageService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -32,13 +34,15 @@
           SignInManager<User> signInManager,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder,
-          IUserService userService)
+          IUserService userService,
+          IImageService imageServise)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.urlEncoder = urlEncoder;
             this.userService = userService;
+            this.imageService = imageServise;
         }
 
         [TempData]
@@ -175,6 +179,42 @@
         }
 
         public IActionResult ChangePicture() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePicture(IFormFile image, string url)
+        {
+            var userId = this.userManager.GetUserId(User);
+
+            if (url != null)
+            {
+                if (image != null)
+                {
+                    TempData[WebConstants.WarningMessageKey] = "You cannot upload an image using both (File and Url) at the same time!";
+                    return View();
+                }
+
+                await this.userService.SetAvatar(url, userId);
+                return RedirectToAction("Details", "User");
+            }
+
+            if (image == null)
+            {
+                TempData[WebConstants.WarningMessageKey] = "Theere is not provided picture!";
+                return View();
+            }
+
+            //if (!this.imageService.IsValidImage())
+            //{
+            //    return BadRequest();
+            //}
+
+            var username = this.userManager.GetUserName(User);
+            var picturePath = await this.imageService.SaveImageAsync(image, username, username);
+
+            await this.userService.SetAvatar(picturePath, userId);
+
+            return RedirectToAction("Details", "User");
+        }
 
         [HttpGet]
         public async Task<IActionResult> SetPassword()

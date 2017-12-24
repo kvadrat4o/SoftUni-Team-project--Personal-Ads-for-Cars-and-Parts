@@ -16,8 +16,13 @@
         [Range(FeedbackRatingMinValue, FeedbackRatingMaxValue)]
         public byte Rating { get; set; }
 
-        public string UserId { get; set; }
-        public User User { get; set; }
+        [Required]
+        public string SenderId { get; set; }
+        public User Sender { get; set; }
+
+        [Required]
+        public string ReceiverId { get; set; }
+        public User Receiver { get; set; }
 
         public int ProductId { get; set; }
         public Product Product { get; set; }

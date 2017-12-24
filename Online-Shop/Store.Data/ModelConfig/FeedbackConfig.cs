@@ -9,7 +9,18 @@
         public void Configure(EntityTypeBuilder<Feedback> builder)
         {
             builder
-                .HasKey(e => new { e.ProductId, e.UserId });
+                .HasAlternateKey(e => new { e.ProductId, e.SenderId });
+
+            builder
+                .HasOne(e => e.Sender)
+                .WithMany(u => u.SentFeedbacks)
+                .HasForeignKey(e => e.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(e => e.Receiver)
+                .WithMany(u => u.ReceivedFeedbacks)
+                .HasForeignKey(e => e.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

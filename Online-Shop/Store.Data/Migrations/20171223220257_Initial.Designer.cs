@@ -8,8 +8,8 @@ namespace Store.Data.Migrations
     using System;
 
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20171218213137_ProductPictureAdded")]
-    partial class ProductPictureAdded
+    [Migration("20171223220257_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -133,7 +133,7 @@ namespace Store.Data.Migrations
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(100);
 
                     b.Property<int>("TownId");
 
@@ -196,6 +196,22 @@ namespace Store.Data.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Store.Data.Models.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Name");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("Store.Data.Models.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -214,21 +230,30 @@ namespace Store.Data.Migrations
 
             modelBuilder.Entity("Store.Data.Models.Feedback", b =>
                 {
-                    b.Property<int>("ProductId");
-
-                    b.Property<string>("UserId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<int>("Id");
+                    b.Property<int>("ProductId");
 
                     b.Property<byte>("Rating");
 
-                    b.HasKey("ProductId", "UserId");
+                    b.Property<string>("ReceiverId")
+                        .IsRequired();
 
-                    b.HasIndex("UserId");
+                    b.Property<string>("SenderId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("ProductId", "SenderId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -265,7 +290,7 @@ namespace Store.Data.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(500);
 
-                    b.Property<int>("DiscountId");
+                    b.Property<int?>("DiscountId");
 
                     b.Property<bool>("IsNew");
 
@@ -324,6 +349,8 @@ namespace Store.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CountryId");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30);
@@ -335,6 +362,8 @@ namespace Store.Data.Migrations
 
                     b.HasAlternateKey("Name");
 
+                    b.HasIndex("CountryId");
+
                     b.ToTable("Towns");
                 });
 
@@ -344,6 +373,11 @@ namespace Store.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<int?>("AddressId");
+
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(350);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -391,6 +425,8 @@ namespace Store.Data.Migrations
 
                     b.HasAlternateKey("UserName");
 
+                    b.HasIndex("AddressId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -400,19 +436,6 @@ namespace Store.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Store.Data.Models.UserAddress", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<int>("AddressId");
-
-                    b.HasKey("UserId", "AddressId");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("UsersAddresses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -494,10 +517,15 @@ namespace Store.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Store.Data.Models.User", "User")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("Store.Data.Models.User", "Receiver")
+                        .WithMany("ReceivedFeedbacks")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Store.Data.Models.User", "Sender")
+                        .WithMany("SentFeedbacks")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Store.Data.Models.Invoice", b =>
@@ -515,8 +543,7 @@ namespace Store.Data.Migrations
                 {
                     b.HasOne("Store.Data.Models.Discount", "Discount")
                         .WithMany("Products")
-                        .HasForeignKey("DiscountId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("DiscountId");
 
                     b.HasOne("Store.Data.Models.User", "Seller")
                         .WithMany("ProductsToSell")
@@ -536,17 +563,19 @@ namespace Store.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Store.Data.Models.UserAddress", b =>
+            modelBuilder.Entity("Store.Data.Models.Town", b =>
+                {
+                    b.HasOne("Store.Data.Models.Country", "Country")
+                        .WithMany("Towns")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Store.Data.Models.User", b =>
                 {
                     b.HasOne("Store.Data.Models.Address", "Address")
-                        .WithMany("AddressUsers")
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Store.Data.Models.User", "User")
-                        .WithMany("UserAddresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("Users")
+                        .HasForeignKey("AddressId");
                 });
 #pragma warning restore 612, 618
         }

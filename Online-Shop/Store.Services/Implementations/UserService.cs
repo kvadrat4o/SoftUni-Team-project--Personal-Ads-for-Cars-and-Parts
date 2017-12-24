@@ -7,6 +7,7 @@
     using Store.Services.Models.AddressViewModels;
     using Store.Services.Models.UserViewModels;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class UserService : IUserService
     {
@@ -36,11 +37,13 @@
         public UserDetailsViewModel GetUserDetailsModel(string userId)
         {
             var model = this.db.Users
+                .Where(u => u.Id.Equals(userId))
                 .Select(u => new UserDetailsViewModel
                 {
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Username = u.UserName,
+                    Avatar = u.Avatar,
                     SoldItemsCount = u.SoldInvoices
                         .Select(i => i.InvoiceProducts
                             .Select(ip => ip.Quantity)
@@ -57,6 +60,13 @@
                 .FirstOrDefault();
 
             return model;
+        }
+
+        public async Task SetAvatar(string picturePath, string userId)
+        {
+            var user = this.db.Users.Find(userId);
+            user.Avatar = picturePath;
+            await this.db.SaveChangesAsync();
         }
     }
 }
