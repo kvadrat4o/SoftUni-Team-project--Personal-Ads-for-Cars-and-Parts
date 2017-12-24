@@ -3,6 +3,22 @@
     padding-bottom: 20px;
 }
 
+.dropzone {
+    width: 200px;
+    height: 100px;
+    border: 2px, dashed #ccc;
+    color: #ccc;
+    line-height: 200px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.dropzone.dragover {
+    border-color: #000;
+    color: #000;
+}
+
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

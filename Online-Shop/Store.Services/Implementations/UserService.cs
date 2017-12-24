@@ -68,5 +68,10 @@
             user.Avatar = picturePath;
             await this.db.SaveChangesAsync();
         }
+
+        public Task SetPictureAvatar(string picturePath, string userId)
+        {
+            return null;
+        }
     }
 }

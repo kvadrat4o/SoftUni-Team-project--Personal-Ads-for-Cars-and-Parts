@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,9 @@
     using Store.Services.Models.AddressViewModels;
     using Store.Web.Models.ManageViewModels;
     using System;
+    using System.IO;
     using System.Linq;
+    using System.Net.Http.Headers;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
@@ -177,43 +180,36 @@
 
             return RedirectToAction(nameof(ChangePassword));
         }
-
+        [HttpGet]
         public IActionResult ChangePicture() => View();
 
         [HttpPost]
-        public async Task<IActionResult> ChangePicture(IFormFile image, string url)
+        public async Task<IActionResult> ChangePicture(/*IFormFile file, */string url)
         {
             var userId = this.userManager.GetUserId(User);
 
             if (url != null)
             {
-                if (image != null)
-                {
-                    TempData[WebConstants.WarningMessageKey] = "You cannot upload an image using both (File and Url) at the same time!";
-                    return View();
-                }
-
                 await this.userService.SetAvatar(url, userId);
                 return RedirectToAction("Details", "User");
             }
 
-            if (image == null)
+            var image = Request.Form.Files[0];
+
+            if (image != null)
             {
-                TempData[WebConstants.WarningMessageKey] = "Theere is not provided picture!";
+                var username = this.userManager.GetUserName(User);
+                var picturePath = await this.imageService.SaveImageAsync(image, username, username);
+
+                await this.userService.SetAvatar(picturePath, userId);
+
+                return RedirectToAction("Details", "User");
+            }
+            else
+            {
+                TempData[WebConstants.DangerMessageKey] = "Something went wrong!";
                 return View();
             }
-
-            //if (!this.imageService.IsValidImage())
-            //{
-            //    return BadRequest();
-            //}
-
-            var username = this.userManager.GetUserName(User);
-            var picturePath = await this.imageService.SaveImageAsync(image, username, username);
-
-            await this.userService.SetAvatar(picturePath, userId);
-
-            return RedirectToAction("Details", "User");
         }
 
         [HttpGet]
