@@ -7,7 +7,6 @@
         public const int UserUserNameMinLength = 3;
         public const int UserUserNameMaxLength = 20;
         public const int UserAvatarPathMaxLength = 350;
-        public const string UserDefaultAvatarPath = "/images/DefaultProfilePicture.png";
 
         public const int ProductTitleMinLength = 10;
         public const int ProductTitleMaxLength = 130;

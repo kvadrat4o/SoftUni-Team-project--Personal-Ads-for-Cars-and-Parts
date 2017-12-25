@@ -19,7 +19,7 @@
         public string LastName { get; set; }
 
         [MaxLength(UserAvatarPathMaxLength)]
-        public string Avatar { get; set; } = UserDefaultAvatarPath;
+        public string Avatar { get; set; }
 
         [Range(MoneyMinValue, MoneyMaxValue)]
         public decimal MoneyBalance { get; set; }

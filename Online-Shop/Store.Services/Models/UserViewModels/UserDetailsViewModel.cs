@@ -24,7 +24,7 @@
         public string Username { get; set; }
 
         [MaxLength(UserAvatarPathMaxLength)]
-        public string Avatar { get; set; } = UserDefaultAvatarPath;
+        public string Avatar { get; set; }
 
         [Display(Name = "Sold Items")]
         public int SoldItemsCount { get; set; }

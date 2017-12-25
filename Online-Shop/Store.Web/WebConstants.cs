@@ -2,6 +2,8 @@
 {
     public class WebConstants
     {
+        public const string UserDefaultAvatarPath = "../images/DefaultProfilePicture.png";
+
         /* TempData Keys */
         public const string SuccessMessageKey = "Success";
         public const string InfoMessageKey = "Info";
