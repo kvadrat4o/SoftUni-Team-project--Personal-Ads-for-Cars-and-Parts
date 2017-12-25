@@ -44,10 +44,8 @@
                     LastName = u.LastName,
                     Username = u.UserName,
                     Avatar = u.Avatar,
-                    SoldItemsCount = u.SoldInvoices
-                        .Select(i => i.InvoiceProducts
-                            .Select(ip => ip.Quantity)
-                            .Sum())
+                    SoldItemsCount = u.ProductsToSell
+                        .Select(p => p.TimesSold)
                         .Sum(), 
                     Address = new AddressViewModel
                     {

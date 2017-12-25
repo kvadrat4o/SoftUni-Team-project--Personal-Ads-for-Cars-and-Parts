@@ -18,3 +18,25 @@
 <h4>@string.Format("{0:C}", Model.Price) per piece</h4>
 <br />
 <a asp-controller="User" asp-action="AllProducts" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
+
+<br /><br />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" name="productId" value="@Model.Id" />
+            <div class="form-group">
+                <label>Quantity</label>
+                <input class="form-control" type="number" data-val="true" data-val-range="The field Quantity must be between 0 and 2147483647." data-val-range-max="2147483647" data-val-range-min="0" data-val-required="The Quantity field is required." id="quantity" name="quantity" value="0">
+            </div>
+            <button type="submit" asp-action="Buy" asp-controller="Product" class="btn btn-primary">Buy Now</button>
+            <button type="submit" asp-action="AttToBasket" asp-controller="Product" class="btn btn-info">Add To Basket</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+

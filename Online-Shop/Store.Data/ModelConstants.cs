@@ -2,6 +2,8 @@
 {
     public class ModelConstants
     {
+        public const decimal VAT = 20; // 20%
+
         public const int UserFirstAndLastNameMinLength = 2;
         public const int UserFirstAndLastNameMaxLength = 30;
         public const int UserUserNameMinLength = 3;

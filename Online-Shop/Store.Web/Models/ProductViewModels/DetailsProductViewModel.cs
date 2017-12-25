@@ -1,11 +1,14 @@
 ﻿namespace Store.Web.Models.ProductViewModels
 {
+    using AutoMapper;
     using Data.Models.Enums;
+    using Store.Data.Models;
+    using Store.Infrastructure.Mapping.Interfaces;
     using System.ComponentModel.DataAnnotations;
 
     using static Data.ModelConstants;
 
-    public class DetailsProductViewModel
+    public class DetailsProductViewModel : IMapFrom<Product>
     {
         public int Id { get; set; }
 
@@ -34,5 +37,4 @@
 
         public Category Category { get; set; }
     }
-
 }

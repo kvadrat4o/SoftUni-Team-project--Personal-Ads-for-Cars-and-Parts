@@ -12,18 +12,11 @@
                 .Ignore(e => e.NetValue);
 
             builder
+                .Ignore(e => e.TotalValue);
+
+            builder
                 .Property(e => e.IssueDate)
                 .HasDefaultValueSql("GETDATE()");
-
-            builder
-                .HasOne(e => e.Seller)
-                .WithMany(u => u.SoldInvoices)
-                .HasForeignKey(e => e.SellerId);
-
-            builder
-                .HasOne(e => e.Buyer)
-                .WithMany(u => u.BoughtInvoices)
-                .HasForeignKey(e => e.BuyerId);
         }
     }
 }

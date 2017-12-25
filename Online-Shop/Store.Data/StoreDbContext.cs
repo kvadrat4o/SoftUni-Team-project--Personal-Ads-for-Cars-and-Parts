@@ -30,6 +30,8 @@
 
         public DbSet<ProductInvoice> ProductsInvoices { get; set; }
 
+        public DbSet<ShippingRecord> ShippingRecords { get; set; }
+
         public DbSet<Town> Towns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -8,9 +8,6 @@
     {
         public int Id { get; set; }
 
-        public string SellerId { get; set; }
-        public User Seller { get; set; }
-
         public string BuyerId { get; set; }
         public User Buyer { get; set; }
 
@@ -18,7 +15,11 @@
             .Select(ip => ip.Product.Price * ip.Quantity)
             .Sum();
 
+        public decimal TotalValue => this.NetValue * (ModelConstants.VAT / 100 + 1);
+
         public DateTime IssueDate { get; set; }
+
+        public bool IsPayed { get; set; }
 
         public ICollection<ProductInvoice> InvoiceProducts { get; set; } = new HashSet<ProductInvoice>();
     }

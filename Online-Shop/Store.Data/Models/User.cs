@@ -29,8 +29,6 @@
 
         public ICollection<Product> ProductsToSell { get; set; } = new HashSet<Product>();
 
-        public ICollection<Invoice> SoldInvoices { get; set; } = new HashSet<Invoice>();
-
         public ICollection<Invoice> BoughtInvoices { get; set; } = new HashSet<Invoice>();
 
         public ICollection<Feedback> SentFeedbacks { get; set; } = new HashSet<Feedback>();

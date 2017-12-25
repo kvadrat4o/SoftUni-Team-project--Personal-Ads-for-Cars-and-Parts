@@ -128,13 +128,46 @@
         }
 
         [Authorize]
-        public IActionResult Buy(string buyerId, int productId, int quantity)
+        [HttpPost]
+        public async Task<IActionResult> Buy(int productId, int quantity)
         {
-            if (this.userManager.GetUserId(User) != buyerId)
+            if (quantity <= 0)
             {
-                return RedirectToAction("Details");
+                TempData[WebConstants.WarningMessageKey] = "Quantity must be greater than 0";
+                return RedirectToAction(nameof(Details), new { id = productId });
             }
 
+            var product = await this.productService.GetProduct(productId);
+            if (product == null)
+            {
+                return BadRequest();
+            }
+            else if (!product.IsActive)
+            {
+                TempData[WebConstants.DangerMessageKey] = "This listing is not active. Please try again later or try find the product from other seller";
+                return RedirectToAction(nameof(Details), new { id = productId });
+            }
+
+            var buyerId = this.userManager.GetUserId(User);
+            if (product.SellerId == buyerId)
+            {
+                TempData[WebConstants.WarningMessageKey] = "You cannot buy your own product";
+            }
+
+            var buyer = await this.userManager.FindByIdAsync(buyerId);
+            if (buyer.MoneyBalance < product.Price * quantity)
+            {
+                TempData[WebConstants.DangerMessageKey] = "You have not enough money!";
+            }
+
+            var invoice = this.productService.CreateInvoice(product, quantity, buyerId);
+            await this.productService.TryPayInvoiceAsync(invoice);
+
+            return RedirectToAction(nameof(InvoiceDetails), new { id = invoice.Id });
+        }
+
+        public IActionResult InvoiceDetails(int id)
+        {
             return null;
         }
     }

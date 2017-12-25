@@ -93,6 +93,72 @@
         public IEnumerable<Product> ProductsBySeller(string sellerId) => this.db.Products
             .Where(p => p.SellerId == sellerId);
 
+        public Invoice CreateInvoice(Product product, int quantity, string buyerId)
+        {
+            if (quantity <= 0)
+            {
+                throw new InvalidOperationException("Quantity cannot be neither less than nor equal to 0");
+            }
+
+            var invoice = new Invoice { BuyerId = buyerId };
+            invoice.InvoiceProducts.Add(new ProductInvoice
+            {
+                ProductId = product.Id,
+                Quantity = quantity
+            });
+
+            this.db.Invoices.Add(invoice);
+            this.db.SaveChangesAsync();
+
+            return invoice;
+        }
+
+        public async Task<bool> TryPayInvoiceAsync(Invoice invoice)
+        {
+            if (invoice.IsPayed)
+            {
+                throw new InvalidOperationException("This invoice is already payed");
+            }
+
+            var buyer = await this.db.Users.FindAsync(invoice.BuyerId);
+            if (buyer.MoneyBalance < invoice.TotalValue)
+            {
+                throw new InvalidOperationException("You have not enough money!");
+            }
+
+
+            this.db.Entry(invoice).State = EntityState.Unchanged;
+            buyer.MoneyBalance -= invoice.TotalValue;
+            invoice.IsPayed = true;
+
+            await this.db.SaveChangesAsync();
+            this.CreateShippingRecordAsync(invoice).Wait();
+
+            return true;
+        }
+
+        private async Task CreateShippingRecordAsync(Invoice invoice)
+        {
+            if (!invoice.IsPayed)
+            {
+                throw new InvalidOperationException("This invoice is not payed yet!");
+            }
+
+            var shippingRecords = new List<ShippingRecord>();
+
+            foreach (var ip in invoice.InvoiceProducts)
+            {
+                shippingRecords.Add(new ShippingRecord
+                {
+                    Invoice = invoice, 
+                    ProductId = ip.ProductId, 
+                    Quantity = ip.Quantity
+                });
+            }
+
+            await this.db.ShippingRecords.AddRangeAsync(shippingRecords);
+        }
+
         private async Task SetChangedValuesAsync(Product productToEdit, EditProductViewModel newProductData)
         {
             if (!newProductData.Title.Equals(productToEdit.Title, StringComparison.OrdinalIgnoreCase))
