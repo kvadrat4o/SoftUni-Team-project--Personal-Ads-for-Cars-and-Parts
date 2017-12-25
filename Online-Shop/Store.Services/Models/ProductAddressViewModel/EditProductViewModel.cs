@@ -6,6 +6,8 @@
 
     public class EditProductViewModel
     {
+        public int Id { get; set; }
+
         [MinLength(ProductTitleMinLength)]
         [MaxLength(ProductTitleMaxLength)]
         public string Title { get; set; }

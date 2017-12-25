@@ -1,5 +1,6 @@
 ﻿namespace Store.Services.Interfaces
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Store.Data.Models;
     using Store.Services.Models.ProductViewModels;
@@ -10,8 +11,10 @@
 
         void Delete(Product product);
         
-        Task<Product> GetProduct(string title);
+        Task<Product> GetProduct(int id);
 
-        Task<Product> Edit(string oldProductTitle, EditProductViewModel newProductData);
+        Task<Product> Edit(EditProductViewModel newProductData, string requestUserId);
+
+        IEnumerable<Product> ProductsBySeller(string sellerId);
     }
 }

@@ -7,7 +7,7 @@
     {
         public int Id { get; set; }
 
-        public string UserName { get; set; }
+        public string SellerUserName { get; set; }
 
         public ICollection<DetailsProductViewModel> ProductsToSell { get; set; }
     }

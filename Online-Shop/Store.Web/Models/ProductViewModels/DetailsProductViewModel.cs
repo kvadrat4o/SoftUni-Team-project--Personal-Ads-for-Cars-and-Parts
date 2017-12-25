@@ -7,6 +7,10 @@
 
     public class DetailsProductViewModel
     {
+        public int Id { get; set; }
+
+        public string SellerId { get; set; }
+
         [Required]
         [MinLength(ProductTitleMinLength)]
         [MaxLength(ProductTitleMaxLength)]

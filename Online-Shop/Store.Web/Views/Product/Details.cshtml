@@ -1,4 +1,4 @@
-﻿@model  DetailsProductViewModel
+﻿@model DetailsProductViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -16,3 +16,5 @@
 <h4>Quantity: @Model.Quantity</h4>
 <br />
 <h4>@string.Format("{0:C}", Model.Price) per piece</h4>
+<br />
+<a asp-controller="User" asp-action="AllProducts" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>

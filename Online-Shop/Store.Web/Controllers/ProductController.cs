@@ -1,5 +1,6 @@
 ﻿namespace Store.Web.Controllers
 {
+    using System;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -56,12 +57,16 @@
 
             TempData[WebConstants.SuccessMessageKey] = $"Product {model.Title} is successfully created.";
 
-            return RedirectToAction("Details", new { title = model.Title });
+            return RedirectToAction("Details", new { id = product.Id });
         }
 
-        public async Task<IActionResult> Edit(string title)
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
         {
-            var product = await this.productService.GetProduct(title);
+            var product = await this.productService.GetProduct(id);
+
+            var requestUserId = this.userManager.GetUserId(User);
+
             var mappedProduct = Mapper.Map<EditProductViewModel>(product);
 
             return View(mappedProduct);
@@ -69,29 +74,48 @@
 
         [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditProductViewModel model)
         {
-            var finalProduct = await this.productService.Edit(model.Title, model);
+            Product finalProduct = null;
+            var user = this.userManager.GetUserId(User);
+
+            try
+            {
+                finalProduct = await this.productService.Edit(model, user);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                TempData[WebConstants.DangerMessageKey] = ioe.Message;
+                return View(model);
+            }
+
             var mappedProduct = Mapper.Map<DetailsProductViewModel>(finalProduct);
 
             return View("Details", mappedProduct);
         }
 
         [Authorize]
-        public async Task<IActionResult> Delete (string title)
+        public async Task<IActionResult> Delete (int id)
         {
-            var productToDelete = await this.productService.GetProduct(title);
-            this.productService.Delete(productToDelete);
+            var productToDelete = await this.productService.GetProduct(id);
 
-            TempData[WebConstants.SuccessMessageKey] = $"Product {title} was succcesfully deleted.";
+            var userId = this.userManager.GetUserId(User);
+            if (productToDelete == null || productToDelete.SellerId != userId)
+            {
+                return BadRequest();
+            }
+
+            var title = productToDelete.Title;
+
+            this.productService.Delete(productToDelete);
+            TempData[WebConstants.SuccessMessageKey] = $"Product {productToDelete.Title} was succcesfully deleted.";
 
             return RedirectToAction("AllProducts", "User");
         }
 
-        public async Task<IActionResult> Details(string title)
+        public async Task<IActionResult> Details(int id)
         {
-            var product = await this.productService.GetProduct(title);
+            var product = await this.productService.GetProduct(id);
 
             if (product == null)
             {
@@ -101,6 +125,17 @@
             var mapped = Mapper.Map<DetailsProductViewModel>(product);
 
             return View(nameof(Details), mapped);
+        }
+
+        [Authorize]
+        public IActionResult Buy(string buyerId, int productId, int quantity)
+        {
+            if (this.userManager.GetUserId(User) != buyerId)
+            {
+                return RedirectToAction("Details");
+            }
+
+            return null;
         }
     }
 }

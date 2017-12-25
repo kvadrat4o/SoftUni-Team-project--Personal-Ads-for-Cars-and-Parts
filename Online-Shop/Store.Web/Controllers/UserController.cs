@@ -17,16 +17,15 @@
     {
         private IUserService userService;
         private readonly UserManager<User> userManager;
-        private readonly StoreDbContext db;
-
+        private readonly IProductService productService;
 
         public UserController(UserManager<User> userManager,
             IUserService userService,
-            StoreDbContext db)
+            IProductService productService)
         {
             this.userManager = userManager;
             this.userService = userService;
-            this.db = db;
+            this.productService = productService;
         }
 
         [HttpGet]
@@ -43,16 +42,25 @@
             return RedirectToAction("Details");
         }
 
-        [Authorize]
-        public async Task<IActionResult> AllProducts()
+        public async Task<IActionResult> AllProducts(string sellerId)
         {
-            var user = await userManager.GetUserAsync(User);
-            var products = db.Products.Where(p => p.Seller.UserName.Equals(user.UserName));
+            if (sellerId == null)
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return BadRequest();
+                }
+
+                sellerId = this.userManager.GetUserId(User);
+            }
+
+            var products = this.productService.ProductsBySeller(sellerId);
+            var seller = await this.userManager.FindByIdAsync(sellerId);
 
             var mappedProducts = Mapper.Map<DetailsProductViewModel[]>(products);
             var productsToShow = new UserProductsListViewModel
             {
-                UserName = user.UserName,
+                SellerUserName = seller.UserName,
                 ProductsToSell = mappedProducts
             };
 

@@ -8,6 +8,8 @@
     using System;
     using System.Threading.Tasks;
     using Store.Services.Models.ProductViewModels;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class ProductService : IProductService
     {
@@ -30,7 +32,7 @@
                 return $"There is already a product with that title: {product.Title}";
             }
 
-            var isTaxPayed = await this.TryPayTaxAsync(product.SellerId);
+            var isTaxPayed = await this.TryPayListingTaxAsync(product.SellerId);
             if (!isTaxPayed)
             {
                 return $"You don't have enough money to publish a product! Please charge your account.";
@@ -48,13 +50,9 @@
             db.SaveChanges();
         }
 
-        public async Task<Product> GetProduct(string title)
-        {
-            var product = await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
-            return product;
-        }
+        public async Task<Product> GetProduct(int id) => await db.Products.FindAsync(id);
 
-        private async Task<bool> TryPayTaxAsync(string sellerId)
+        private async Task<bool> TryPayListingTaxAsync(string sellerId)
         {
             var seller = await this.db.Users.FindAsync(sellerId);
             var sellerRoles = await this.userManager.GetRolesAsync(seller);
@@ -77,29 +75,66 @@
             return true;
         }
 
-        public async Task<Product> Edit(string oldProductTitle, EditProductViewModel newProductData)
+        public async Task<Product> Edit(EditProductViewModel newProductData, string requestUserId)
         {
-            var productToEdit = await this.GetProduct(oldProductTitle);
+            var productToEdit = await this.GetProduct(newProductData.Id);
+            if (requestUserId != productToEdit.SellerId)
+            {
+                throw new InvalidOperationException("You are not allowed to edit a product which is not created by you!");
+            }
 
-            if (newProductData.PicturePath != null)
+            await this.SetChangedValuesAsync(productToEdit, newProductData);
+
+            await db.SaveChangesAsync();
+
+            return productToEdit;
+        }
+
+        public IEnumerable<Product> ProductsBySeller(string sellerId) => this.db.Products
+            .Where(p => p.SellerId == sellerId);
+
+        private async Task SetChangedValuesAsync(Product productToEdit, EditProductViewModel newProductData)
+        {
+            if (!newProductData.Title.Equals(productToEdit.Title, StringComparison.OrdinalIgnoreCase))
+            {
+                if (await this.db.Products
+                    .AnyAsync(p => p.Title.Equals(newProductData.Title, StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new InvalidOperationException($"Already there is a product named: {newProductData.Title}");
+                }
+
+                productToEdit.Title = newProductData.Title;
+            }
+
+            if (newProductData.PicturePath != productToEdit.PicturePath)
             {
                 productToEdit.PicturePath = newProductData.PicturePath;
             }
-            if (newProductData.PartNumber != null)
+
+            if (newProductData.PartNumber != productToEdit.PartNumber)
             {
                 productToEdit.PartNumber = newProductData.PartNumber;
             }
+
             if (newProductData.Description != null)
             {
                 productToEdit.Description = newProductData.Description;
             }
 
-            productToEdit.Price = newProductData.Price;
-            productToEdit.Quantity = newProductData.Quantity;
+            if (newProductData.Price != productToEdit.Price)
+            {
+                productToEdit.Price = newProductData.Price;
+            }
 
-            await db.SaveChangesAsync();
+            if (newProductData.Quantity != productToEdit.Quantity)
+            {
+                productToEdit.Quantity = newProductData.Quantity;
+            }
 
-            return productToEdit;
+            if (newProductData.Category != productToEdit.Category)
+            {
+                productToEdit.Category = newProductData.Category;
+            }
         }
     }
 }
