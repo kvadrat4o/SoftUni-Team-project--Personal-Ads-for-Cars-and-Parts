@@ -5,12 +5,12 @@
 
     public interface IInvoiceService
     {
-        Task<Invoice> GetInvoiceAsync(int id);
-
-        Task PayInvoiceAsync(int invoiceId);
-
         Task<Invoice> CreateInvoiceAsync(string buyerId);
 
         Task AddProduct(Product product, int quantity, Invoice invoice);
+
+        Task<Invoice> GetInvoiceWithNavPropsAsync(int id);
+
+        Task PayInvoiceAsync(int invoiceId);
     }
 }

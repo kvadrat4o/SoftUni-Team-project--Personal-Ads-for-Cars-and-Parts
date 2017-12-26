@@ -1,5 +1,6 @@
 ﻿namespace Store.Web.Controllers
 {
+    using System;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,7 @@
 
         public async Task<IActionResult> Details(int id)
         {
-            var invoice = await this.invoiceService.GetInvoiceAsync(id);
+            var invoice = await this.invoiceService.GetInvoiceWithNavPropsAsync(id);
 
             var model = Mapper.Map<InvoiceViewModel>(invoice);
 
@@ -35,13 +36,21 @@
         {
             var userId = this.userManager.GetUserId(User);
 
-            var invoice = await this.invoiceService.GetInvoiceAsync(id);
+            var invoice = await this.invoiceService.GetInvoiceWithNavPropsAsync(id);
             if (invoice.BuyerId != userId)
             {
                 return BadRequest();
             }
 
-            await this.invoiceService.PayInvoiceAsync(id);
+            try
+            {
+                await this.invoiceService.PayInvoiceAsync(id);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                TempData[WebConstants.DangerMessageKey] = ioe.Message;
+                return RedirectToAction(nameof(Details), new { id });
+            }
 
             TempData[WebConstants.SuccessMessageKey] = "Thank you for your purchase. Your order will be shipped as soon as possible.";
             return RedirectToAction(nameof(Details), new { id });
