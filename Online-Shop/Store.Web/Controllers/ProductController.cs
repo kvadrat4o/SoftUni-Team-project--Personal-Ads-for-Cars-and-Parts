@@ -1,28 +1,29 @@
 ﻿namespace Store.Web.Controllers
 {
-    using System;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
     using Store.Services.Models.ProductViewModels;
     using Store.Web.Models.ProductViewModels;
+    using System;
     using System.Threading.Tasks;
 
     public class ProductController : Controller
     {
-        private IProductService productService;
-        private UserManager<User> userManager;
+        private readonly IProductService productService;
+        private readonly IInvoiceService invoiceService;
+        private readonly UserManager<User> userManager;
 
         public ProductController(UserManager<User> userManager, 
-            IProductService productService)
+            IProductService productService,
+            IInvoiceService invoiceService)
         {
             this.userManager = userManager;
             this.productService = productService;
+            this.invoiceService = invoiceService;
         }
         
         [Authorize]
@@ -57,7 +58,7 @@
 
             TempData[WebConstants.SuccessMessageKey] = $"Product {model.Title} is successfully created.";
 
-            return RedirectToAction("Details", new { id = product.Id });
+            return RedirectToAction(nameof(Details), new { id = product.Id });
         }
 
         [Authorize]
@@ -91,7 +92,7 @@
 
             var mappedProduct = Mapper.Map<DetailsProductViewModel>(finalProduct);
 
-            return View("Details", mappedProduct);
+            return View(nameof(Details), mappedProduct);
         }
 
         [Authorize]
@@ -167,19 +168,11 @@
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
 
-            var invoice = await this.productService.CreateInvoiceAsync(product, quantity, buyerId);
-            await this.productService.TryPayInvoiceAsync(invoice);
+            var invoice = await this.invoiceService.CreateInvoiceAsync(buyerId);
+            await this.invoiceService.AddProduct(product, quantity, invoice);
+            await this.invoiceService.PayInvoiceAsync(invoice.Id);
 
-            return RedirectToAction(nameof(InvoiceDetails), new { id = invoice.Id });
-        }
-
-        public async Task<IActionResult> InvoiceDetails(int id)
-        {
-            var invoice = await this.productService.GetInvoice(id);
-
-            var model = Mapper.Map<InvoiceViewModel>(invoice);
-
-            return View(model);
+            return RedirectToAction("Details", "Invoice", new { id = invoice.Id });
         }
     }
 }

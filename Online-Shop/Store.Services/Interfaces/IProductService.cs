@@ -16,11 +16,5 @@
         Task<Product> Edit(EditProductViewModel newProductData, string requestUserId);
 
         IEnumerable<Product> ProductsBySeller(string sellerId);
-
-        Task<Invoice> CreateInvoiceAsync(Product product, int quantity, string buyerId);
-
-        Task<bool> TryPayInvoiceAsync(Invoice invoice);
-
-        Task<Invoice> GetInvoice(int id);
     }
 }

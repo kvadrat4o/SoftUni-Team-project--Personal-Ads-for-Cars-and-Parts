@@ -1,12 +1,9 @@
-﻿namespace Store.Web.Models.ProductViewModels
+﻿namespace Store.Web.Models.InvoiceViewModels
 {
     using AutoMapper;
-    using Store.Data;
     using Store.Data.Models;
     using Store.Infrastructure.Mapping.Interfaces;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class InvoiceViewModel : IMapFrom<Invoice>, IHaveCustomMapping
     {
@@ -29,6 +26,8 @@
         public decimal TotalValue { get; set; }
 
         public decimal NetValue { get; set; }
+
+        public bool IsPayed { get; set; }
 
         public ICollection<InvoiceProductViewModel> Products { get; set; } = new HashSet<InvoiceProductViewModel>();
 

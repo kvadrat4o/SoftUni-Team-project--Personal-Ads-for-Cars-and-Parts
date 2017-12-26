@@ -4,6 +4,7 @@
     ViewData["Title"] = "Invoice";
 }
 
+<br />
 <table class="table table-striped table-bordered table-hover">
     <tbody>
         <tr>
@@ -26,40 +27,45 @@
             </td>
             <td>
                 <p class="text-right">
-                    <b>@Model.BuyerFirstName @Model.BuyerLastName</b><br><br>
+                    <b>@Model.BuyerFirstName @Model.BuyerLastName</b>
+                </p>
+                <p class="text-right">
                     @Model.BuyeerStreet<br>
                     @Model.BuyeerTown<br>
                     @Model.BuyeerPostCode<br>
                     @Model.BuyeerCountry<br>
+                </p>
             </td>
         </tr>
     </tbody>
 </table>
 
 <table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nr</th>
+            <th>Picture</th>
+            <th>Title</th>
+            <th>Condition</th>
+            <th>Options</th>
+            <th>Quantity</th>
+            <th>Net Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    @{ var number = 1; }
     <tbody>
-        <thead>
-            <tr>
-                <th>Nr</th>
-                <th>Picture</th>
-                <th>Title</th>
-                <th>Condition</th>
-                <th>Seller</th>
-                <th>Quantity</th>
-                <th>Net Price</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        @{ var number = 1; }
-
         @foreach (var product in Model.Products)
         {
             <tr>
                 <td>@number</td>
                 <td><img src="@product.PicturePath" class="img-responsive img-thumbnail"></td>
-                <td>@product.Title</td>
+                <td><a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Title</a></td>
                 <td>@(product.IsNew ? "New" : "Second Hand")</td>
-                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@product.SellerId" asp-ro" rou class="btn-link small">Seller details</a></td>
+                <td>
+                    <div><a asp-action="RemoveProduct" asp-route-productId="@product.Id" asp-route-invoiceId="@Model.Id" class="btn-link small">Remove Product</a></div>
+                    <div><a asp-controller="User" asp-action="Details" asp-route-userId="@product.SellerId" class="btn-link small">Seller Details</a></div>
+                </td>
                 <td>@product.Quantity</td>
                 <td>@string.Format("{0:C2}", product.NetPrice * product.Quantity)</td>
                 <td>@string.Format("{0:C2}", product.Price * product.Quantity)</td>
@@ -69,3 +75,23 @@
         <tr><td colspan="6"></td><td><b>Total Price</b></td><td><b>@string.Format("{0:C2}", Model.TotalValue)</b></td></tr>
     </tbody>
 </table>
+
+<hr />
+
+@if (!Model.IsPayed)
+{
+    <div class="text-center">
+        <a asp-action="Pay" asp-route-id="@Model.Id" class="btn btn-primary">Pay Now</a>
+    </div>
+}
+else
+{
+    <p>Your order is payed and will arrive soon to your address</p>
+    <p>
+        <b>@Model.BuyerFirstName @Model.BuyerLastName</b><br />
+        @Model.BuyeerStreet<br />
+        @Model.BuyeerTown<br />
+        @Model.BuyeerPostCode<br />
+        @Model.BuyeerCountry<br />
+    </p>
+}

@@ -1,4 +1,4 @@
-﻿namespace Store.Web.Models.ProductViewModels
+﻿namespace Store.Web.Models.InvoiceViewModels
 {
     using AutoMapper;
     using Store.Data;
@@ -7,6 +7,8 @@
 
     public class InvoiceProductViewModel : IMapFrom<ProductInvoice>, IHaveCustomMapping
     {
+        public int Id { get; set; }
+
         public string Title { get; set; }
 
         public decimal Price { get; set; }
@@ -24,6 +26,7 @@
         public void ConfigureMapping(Profile mapper)
         {
             mapper.CreateMap<ProductInvoice, InvoiceProductViewModel>()
+                .ForMember(p => p.Id, options => options.MapFrom(p => p.Product.Id))
                 .ForMember(p => p.Title, options => options.MapFrom(p => p.Product.Title))
                 .ForMember(p => p.Price, options => options.MapFrom(p => p.Product.Price))
                 .ForMember(p => p.PicturePath, options => options.MapFrom(p => p.Product.PicturePath))
