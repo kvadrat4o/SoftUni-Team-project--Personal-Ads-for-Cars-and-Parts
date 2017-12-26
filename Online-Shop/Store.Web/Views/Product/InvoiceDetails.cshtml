@@ -1,0 +1,71 @@
+﻿@model InvoiceViewModel
+
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<table class="table table-striped table-bordered table-hover">
+    <tbody>
+        <tr>
+            <td>
+                <p>
+                    <b>Frer Choice EU Ltd.</b><br><br>
+                    Company MOL Name<br>
+                    FC Street Address<br>
+                    FC Registration Town<br>
+                    Post Code<br>
+                    CountryNmae
+                </p>
+            </td>
+            <td>
+                <div class="text-center">
+                    <img src="~/images/FullLogo.png" class="invoice-logo">
+                </div>
+                <p class="text-center"><b>Invoice Nr:</b> @Model.Id.ToString().PadLeft(10, '0')</p>
+                <p class="text-center"><b>Date:</b> @DateTime.Now.ToShortDateString()</p>
+            </td>
+            <td>
+                <p class="text-right">
+                    <b>@Model.BuyerFirstName @Model.BuyerLastName</b><br><br>
+                    @Model.BuyeerStreet<br>
+                    @Model.BuyeerTown<br>
+                    @Model.BuyeerPostCode<br>
+                    @Model.BuyeerCountry<br>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-striped table-bordered table-hover">
+    <tbody>
+        <thead>
+            <tr>
+                <th>Nr</th>
+                <th>Picture</th>
+                <th>Title</th>
+                <th>Condition</th>
+                <th>Seller</th>
+                <th>Quantity</th>
+                <th>Net Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        @{ var number = 1; }
+
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@number</td>
+                <td><img src="@product.PicturePath" class="img-responsive img-thumbnail"></td>
+                <td>@product.Title</td>
+                <td>@(product.IsNew ? "New" : "Second Hand")</td>
+                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@product.SellerId" asp-ro" rou class="btn-link small">Seller details</a></td>
+                <td>@product.Quantity</td>
+                <td>@string.Format("{0:C2}", product.NetPrice * product.Quantity)</td>
+                <td>@string.Format("{0:C2}", product.Price * product.Quantity)</td>
+            </tr>
+        }
+        <tr><td colspan="6"></td><td>Net Value</td><td>@string.Format("{0:C2}", Model.NetValue)</td></tr>
+        <tr><td colspan="6"></td><td><b>Total Price</b></td><td><b>@string.Format("{0:C2}", Model.TotalValue)</b></td></tr>
+    </tbody>
+</table>

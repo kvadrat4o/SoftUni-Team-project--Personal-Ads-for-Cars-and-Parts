@@ -3,6 +3,7 @@
     public class WebConstants
     {
         public const string UserDefaultAvatarPath = "../images/DefaultProfilePicture.png";
+        public const string FullLogoPath = "../images/FullLogo.png";
 
         /* TempData Keys */
         public const string SuccessMessageKey = "Success";

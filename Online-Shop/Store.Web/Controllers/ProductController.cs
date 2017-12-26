@@ -133,7 +133,7 @@
         {
             if (quantity <= 0)
             {
-                TempData[WebConstants.WarningMessageKey] = "Quantity must be greater than 0";
+                TempData[WebConstants.DangerMessageKey] = "Quantity must be greater than 0";
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
 
@@ -147,28 +147,39 @@
                 TempData[WebConstants.DangerMessageKey] = "This listing is not active. Please try again later or try find the product from other seller";
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
+            else if (product.Quantity < quantity)
+            {
+                TempData[WebConstants.DangerMessageKey] = $"Available quantity is {product.Quantity}. If you need bigger quantity than {product.Quantity} you can contact the seller or search for other sellers with the same product.";
+                return RedirectToAction(nameof(Details), new { id = productId });
+            }
 
             var buyerId = this.userManager.GetUserId(User);
             if (product.SellerId == buyerId)
             {
                 TempData[WebConstants.WarningMessageKey] = "You cannot buy your own product";
+                return RedirectToAction(nameof(Details), new { id = productId });
             }
 
             var buyer = await this.userManager.FindByIdAsync(buyerId);
             if (buyer.MoneyBalance < product.Price * quantity)
             {
                 TempData[WebConstants.DangerMessageKey] = "You have not enough money!";
+                return RedirectToAction(nameof(Details), new { id = productId });
             }
 
-            var invoice = this.productService.CreateInvoice(product, quantity, buyerId);
+            var invoice = await this.productService.CreateInvoiceAsync(product, quantity, buyerId);
             await this.productService.TryPayInvoiceAsync(invoice);
 
             return RedirectToAction(nameof(InvoiceDetails), new { id = invoice.Id });
         }
 
-        public IActionResult InvoiceDetails(int id)
+        public async Task<IActionResult> InvoiceDetails(int id)
         {
-            return null;
+            var invoice = await this.productService.GetInvoice(id);
+
+            var model = Mapper.Map<InvoiceViewModel>(invoice);
+
+            return View(model);
         }
     }
 }

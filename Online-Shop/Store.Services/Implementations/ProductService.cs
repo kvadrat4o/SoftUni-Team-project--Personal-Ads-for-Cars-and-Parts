@@ -93,7 +93,7 @@
         public IEnumerable<Product> ProductsBySeller(string sellerId) => this.db.Products
             .Where(p => p.SellerId == sellerId);
 
-        public Invoice CreateInvoice(Product product, int quantity, string buyerId)
+        public async Task<Invoice> CreateInvoiceAsync(Product product, int quantity, string buyerId)
         {
             if (quantity <= 0)
             {
@@ -107,8 +107,8 @@
                 Quantity = quantity
             });
 
-            this.db.Invoices.Add(invoice);
-            this.db.SaveChangesAsync();
+            await this.db.Invoices.AddAsync(invoice);
+            await this.db.SaveChangesAsync();
 
             return invoice;
         }
@@ -126,7 +126,6 @@
                 throw new InvalidOperationException("You have not enough money!");
             }
 
-
             this.db.Entry(invoice).State = EntityState.Unchanged;
             buyer.MoneyBalance -= invoice.TotalValue;
             invoice.IsPayed = true;
@@ -136,6 +135,15 @@
 
             return true;
         }
+
+        public async Task<Invoice> GetInvoice(int id) => await this.db.Invoices
+            .Include(i => i.Buyer)
+                .ThenInclude(b => b.Address)
+                    .ThenInclude(a => a.Town)
+                    .ThenInclude(a => a.Country)
+            .Include(i => i.InvoiceProducts)
+                .ThenInclude(ip => ip.Product)
+            .FirstOrDefaultAsync(i => i.Id == id);
 
         private async Task CreateShippingRecordAsync(Invoice invoice)
         {

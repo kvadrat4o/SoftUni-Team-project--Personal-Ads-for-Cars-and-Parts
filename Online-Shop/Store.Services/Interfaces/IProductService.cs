@@ -17,8 +17,10 @@
 
         IEnumerable<Product> ProductsBySeller(string sellerId);
 
-        Invoice CreateInvoice(Product product, int quantity, string buyerId);
+        Task<Invoice> CreateInvoiceAsync(Product product, int quantity, string buyerId);
 
         Task<bool> TryPayInvoiceAsync(Invoice invoice);
+
+        Task<Invoice> GetInvoice(int id);
     }
 }

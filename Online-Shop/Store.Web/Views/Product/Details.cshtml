@@ -28,7 +28,7 @@
             <input type="hidden" asp-for="Id" name="productId" value="@Model.Id" />
             <div class="form-group">
                 <label>Quantity</label>
-                <input class="form-control" type="number" data-val="true" data-val-range="The field Quantity must be between 0 and 2147483647." data-val-range-max="2147483647" data-val-range-min="0" data-val-required="The Quantity field is required." id="quantity" name="quantity" value="0">
+                <input class="form-control" type="number" data-val="true" data-val-range="The field Quantity must be between 1 and 2147483647." data-val-range-max="2147483647" data-val-range-min="1" data-val-required="The Quantity field is required." id="quantity" name="quantity" value="0">
             </div>
             <button type="submit" asp-action="Buy" asp-controller="Product" class="btn btn-primary">Buy Now</button>
             <button type="submit" asp-action="AttToBasket" asp-controller="Product" class="btn btn-info">Add To Basket</button>
