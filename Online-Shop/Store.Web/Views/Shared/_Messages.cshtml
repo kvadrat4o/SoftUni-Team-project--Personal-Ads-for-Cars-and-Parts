@@ -16,9 +16,9 @@ else if (TempData.ContainsKey(WebConstants.WarningMessageKey))
         <b>Attention! </b>@TempData[WebConstants.WarningMessageKey]
     </div>
 }
-else if (TempData.ContainsKey(WebConstants.Danger))
+else if (TempData.ContainsKey(WebConstants.DangerMessageKey))
 {
     <div class="alert alert-danger text-center">
-        <b>Warning! </b>@TempData[WebConstants.Danger]
+        <b>Warning! </b>@TempData[WebConstants.DangerMessageKey]
     </div>
 }
