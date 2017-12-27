@@ -148,6 +148,11 @@
                 TempData[WebConstants.DangerMessageKey] = "This listing is not active. Please try again later or try find the product from other seller";
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
+            else if (product.Quantity == 0)
+            {
+                TempData[WebConstants.DangerMessageKey] = $"This product ended. We are sorry. You can contact the seller to ask for next charge.";
+                return RedirectToAction(nameof(Details), new { id = productId });
+            }
             else if (product.Quantity < quantity)
             {
                 TempData[WebConstants.DangerMessageKey] = $"Available quantity is {product.Quantity}. If you need bigger quantity than {product.Quantity} you can contact the seller or search for other sellers with the same product.";
