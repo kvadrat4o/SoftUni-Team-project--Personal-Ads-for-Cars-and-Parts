@@ -1,4 +1,4 @@
-﻿@model AddressViewModel
+﻿@model SetAddressViewModel
 @{
     ViewData["Title"] = "Set Address";
     ViewData.AddActivePage(ManageNavPages.SetAddress);
@@ -19,11 +19,6 @@
                 <label asp-for="TownName"></label>
                 <input asp-for="TownName" class="form-control" />
                 <span asp-validation-for="TownName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostCode"></label>
-                <input asp-for="PostCode" class="form-control" />
-                <span asp-validation-for="PostCode" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Street"></label>

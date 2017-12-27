@@ -1,0 +1,74 @@
+﻿@model List<Store.Data.Models.User>
+
+@{
+    ViewBag.Title = "Admin Panel";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title></title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container header header-filter" style="background-image: url(../../Content/img/AdminPanel.png);
+            margin: -500px -100px -100px 0px; overflow:hidden; border-radius: 20px 20px
+            ">
+
+        </div>
+        <div class="row col-md-offset-4">
+            <div class="main main-raised col-md-6"
+                 style="margin: -50px 100px 10px 10px">
+
+                <div style="margin: -40px 8px 10px 10px">
+                    <div class="name text-center">
+                        <button class="btn btn-simple text-center">
+                            <h1><b>Admin Panel</b></h1>
+                        </button><br />
+
+                        <div class="card">
+                            <!--TABLE STARTS HERE-->
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Username</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int currUser = 0; currUser < Model.Count; currUser++)
+                                    {
+                                        var user = Model[currUser];
+
+                                        if (user.Email == this.User.Identity.Name)
+                                        {
+                                            continue;
+                                        }
+
+                                        <tr>
+                                            <td class="text-left"><a href="/Profile/OtherProfile?otherProfileId=@user.Id"><b>@user.FirstName @user.LastName</b></a></td>
+                                            <td class="text-right">
+                                                <a style="margin-top: -2px" rel="tooltip" title="View Profile" class="btn btn-info btn-simple btn-xs" href="/Profile/OtherProfile?otherProfileId=@user.Id">
+                                                    <i class="fa fa-info"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                            <!--TABLE ENDS HERE-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+
+</html>

@@ -3,31 +3,32 @@
 @{
     ViewData["Title"] = "All products for sale.";
 }
+<div class="container">
+    <h2>@Model.UserName products for sale:</h2>
 
-<h2>@Model.SellerUserName products for sale:</h2>
-
-@if (Model.ProductsToSell.Count() != 0)
-{
-    <table class="table table-bordered table-hover">
-        <tr>
-            <th>Title</th>
-            <th>Quantity</th>
-            <th></th>
-        </tr>
-        @foreach (var item in Model.ProductsToSell)
-        {
+    @if (Model.ProductsToSell.Count() != 0)
+    {
+        <table class="table table-bordered table-hover">
             <tr>
-                <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id">@item.Title</a></td>
-                <td>@item.Quantity</td>
-                <td>
-                    <a href="~/Product/Edit?id=@item.Id" class="btn btn-warning">Edit</a>
-                    <a href="~/Product/Delete?id=@item.Id" class="btn btn-danger">Delete</a>
-                </td>
+                <th>Name</th>
+                <th>Category</th>
+
             </tr>
-        }
-    </table>
-}
-else
-{
-    <h2>No products for sale.</h2>
-}
+            @foreach (var item in Model.ProductsToSell)
+            {
+                <tr>
+                    <th>@item.Title</th>
+                    <th>@item.Category</th>
+                    <th>
+                        <a href="~/Product/Details?title=@item.Title" class="btn btn-default">Details</a>
+                        <a href="~/Product/Delete?title=@item.Title" class="btn btn-danger">Delete</a>
+                    </th>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h2>No products for sale.</h2>
+    }
+</div>
