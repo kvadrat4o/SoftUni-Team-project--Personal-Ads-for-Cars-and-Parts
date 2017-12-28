@@ -71,20 +71,16 @@
             }
 
             var shippingRecords = await this.CreateShippingRecordAsync(invoice);
-            buyer.MoneyBalance -= invoice.TotalValue;
-            invoice.IsPayed = true;
 
+            buyer.MoneyBalance -= invoice.TotalValue;
+            invoice.IssueDate = DateTime.Now;
+            invoice.IsPayed = true;
             await this.db.ShippingRecords.AddRangeAsync(shippingRecords);
             await this.db.SaveChangesAsync();
         }
 
         private async Task<IEnumerable<ShippingRecord>> CreateShippingRecordAsync(Invoice invoice)
         {
-            if (!invoice.IsPayed)
-            {
-                throw new InvalidOperationException("This invoice is not payed yet!");
-            }
-
             var shippingRecords = new List<ShippingRecord>();
             foreach (var ip in invoice.InvoiceProducts)
             {
@@ -103,31 +99,34 @@
             return shippingRecords;
         }
 
-        private async Task CheckProductQuantityAsync(ProductInvoice ip, Invoice invoice)
+        private async Task CheckProductQuantityAsync(ProductInvoice invoiceProduct, Invoice invoice)
         {
-            if (ip.Product.Quantity < ip.Quantity)
+            if (invoiceProduct.Product.Quantity >= invoiceProduct.Quantity)
             {
-                var message = string.Empty;
-                if (ip.Product.Quantity == 0)
-                {
-                    message = $"We are sorry. Product {ip.Product.Title} ended and we removed it from your order!";
-                    if (invoice.InvoiceProducts.Count > 1)
-                    {
-                        string.Concat(message, " If you still want to pay for the rest of your items you can do it now.");
-                    }
-
-                    this.db.ProductsInvoices.Remove(ip);
-                    await this.db.SaveChangesAsync();
-                }
-                else
-                {
-                    message = $"Currently the available quantity of {ip.Product.Title} is {ip.Product.Quantity}! We updated the quantity with the maximal possible at this momment. If you still want to pay for the rest of your items you can do it now.";
-                    ip.Quantity = ip.Product.Quantity;
-                    await this.db.SaveChangesAsync();
-                }
-
-                throw new InvalidOperationException(message);
+                return;
             }
+
+            var errorMessage = string.Empty;
+
+            if (invoiceProduct.Product.Quantity == 0)
+            {
+                errorMessage = $"We are sorry. Product {invoiceProduct.Product.Title} ended and we removed it from your order!";
+                if (invoice.InvoiceProducts.Count > 1)
+                {
+                    string.Concat(errorMessage, " If you still want to pay for the rest of your items you can do it now.");
+                }
+
+                this.db.ProductsInvoices.Remove(invoiceProduct);
+                await this.db.SaveChangesAsync();
+            }
+            else
+            {
+                errorMessage = $"Currently the available quantity of {invoiceProduct.Product.Title} is {invoiceProduct.Product.Quantity}! We updated the quantity with the maximal possible at this momment. If you still want to pay for the rest of your items you can do it now.";
+                invoiceProduct.Quantity = invoiceProduct.Product.Quantity;
+                await this.db.SaveChangesAsync();
+            }
+
+            throw new InvalidOperationException(errorMessage);
         }
     }
 }

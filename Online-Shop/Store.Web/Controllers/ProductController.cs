@@ -175,9 +175,8 @@
 
             var invoice = await this.invoiceService.CreateInvoiceAsync(buyerId);
             await this.invoiceService.AddProduct(product, quantity, invoice);
-            await this.invoiceService.PayInvoiceAsync(invoice.Id);
 
-            return RedirectToAction("Details", "Invoice", new { id = invoice.Id });
+            return RedirectToAction("Pay", "Invoice", new { id = invoice.Id });
         }
     }
 }

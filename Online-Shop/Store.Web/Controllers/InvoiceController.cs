@@ -52,7 +52,7 @@
                 return RedirectToAction(nameof(Details), new { id });
             }
 
-            TempData[WebConstants.SuccessMessageKey] = "Thank you for your purchase. Your order will be shipped as soon as possible.";
+            TempData[WebConstants.SuccessMessageKey] = WebConstants.OrderCompletedMessageText;
             return RedirectToAction(nameof(Details), new { id });
         }
 
