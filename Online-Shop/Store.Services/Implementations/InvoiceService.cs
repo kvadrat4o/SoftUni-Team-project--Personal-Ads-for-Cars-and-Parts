@@ -6,6 +6,7 @@
     using Store.Services.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class InvoiceService : IInvoiceService
@@ -26,6 +27,13 @@
 
             return invoice;
         }
+
+        public async Task<bool> IsInvoiceCreator(int invoiceId, string userId)
+            => await this.db.Invoices
+            .FirstOrDefaultAsync(i => i.Id == invoiceId && i.BuyerId == userId) != null;
+
+        public async Task<bool> IsPayedAsync(int invoiceId) 
+            => (await this.db.Invoices.FindAsync(invoiceId)).IsPayed;
 
         public async Task AddProduct(Product product, int quantity, Invoice invoice)
         {
@@ -127,6 +135,29 @@
             }
 
             throw new InvalidOperationException(errorMessage);
+        }
+
+        public Task<ProductInvoice> GetInvoiceProductAsync(int productId, int invoiceId)
+            => this.db.ProductsInvoices.FindAsync(productId, invoiceId);
+
+        public async Task<int> RemoveProductFromInvoiceAsync(ProductInvoice invoiceProduct)
+        {
+            this.db.ProductsInvoices.Remove(invoiceProduct);
+            await this.db.SaveChangesAsync();
+
+            var remainedProductsCount = this.db.ProductsInvoices
+                .Where(pi => pi.InvoiceId == invoiceProduct.InvoiceId)
+                .Count();
+
+            return remainedProductsCount;
+        }
+
+        public async Task RemoveInvoiceAsync(int invoiceId)
+        {
+            var invoice = await this.db.Invoices.FindAsync(invoiceId);
+
+            this.db.Invoices.Remove(invoice);
+            await this.db.SaveChangesAsync();
         }
     }
 }

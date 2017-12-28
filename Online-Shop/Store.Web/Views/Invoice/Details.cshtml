@@ -63,7 +63,10 @@
                 <td><a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">@product.Title</a></td>
                 <td>@(product.IsNew ? "New" : "Second Hand")</td>
                 <td>
-                    <div><a asp-action="RemoveProduct" asp-route-productId="@product.Id" asp-route-invoiceId="@Model.Id" class="btn-link small">Remove Product</a></div>
+                    @if (!Model.IsPayed)
+                    {
+                        <div><a asp-action="RemoveProduct" asp-route-productId="@product.Id" asp-route-invoiceId="@Model.Id" class="btn-link small">Remove Product</a></div>
+                    }
                     <div><a asp-controller="User" asp-action="Details" asp-route-userId="@product.SellerId" class="btn-link small">Seller Details</a></div>
                 </td>
                 <td>@product.Quantity</td>

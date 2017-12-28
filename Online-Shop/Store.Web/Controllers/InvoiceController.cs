@@ -10,12 +10,13 @@
     using Store.Web.Models.InvoiceViewModels;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class InvoiceController : Controller
     {
         private readonly UserManager<User> userManager;
         private readonly IInvoiceService invoiceService;
 
-        public InvoiceController(UserManager<User> userManager, 
+        public InvoiceController(UserManager<User> userManager,
             IInvoiceService invoiceService)
         {
             this.userManager = userManager;
@@ -25,13 +26,17 @@
         public async Task<IActionResult> Details(int id)
         {
             var invoice = await this.invoiceService.GetInvoiceWithNavPropsAsync(id);
+            if (invoice == null)
+            {
+                TempData[WebConstants.DangerMessageKey] = "This invoice does not exists!";
+                return RedirectToAction("Index", "Home");
+            }
 
             var model = Mapper.Map<InvoiceViewModel>(invoice);
 
             return View(model);
         }
 
-        [Authorize]
         public async Task<IActionResult> Pay(int id)
         {
             var userId = this.userManager.GetUserId(User);
@@ -56,9 +61,37 @@
             return RedirectToAction(nameof(Details), new { id });
         }
 
-        public IActionResult RemoveProduct(int productId, int invoiceId)
+        public async Task<IActionResult> RemoveProduct(int productId, int invoiceId)
         {
-            return null;
+            if (await this.invoiceService.IsPayedAsync(invoiceId))
+            {
+                TempData[WebConstants.DangerMessageKey] = "You can not remove already ordered products";
+                return RedirectToAction(nameof(Details), new { id = invoiceId });
+            }
+
+            var userId = this.userManager.GetUserId(User);
+            if (!await this.invoiceService.IsInvoiceCreator(invoiceId, userId))
+            {
+                return BadRequest();
+            }
+
+            var invoiceProduct = await this.invoiceService.GetInvoiceProductAsync(productId, invoiceId);
+            if (invoiceProduct == null)
+            {
+                TempData[WebConstants.DangerMessageKey] = "This invoice doesn't contain such a product!";
+                return RedirectToAction(nameof(Details), new { id = invoiceId });
+            }
+
+            var remainedProductsCount = await this.invoiceService.RemoveProductFromInvoiceAsync(invoiceProduct);
+            if (remainedProductsCount == 0)
+            {
+                await this.invoiceService.RemoveInvoiceAsync(invoiceId);
+                TempData[WebConstants.SuccessMessageKey] = "The product was removed from your order.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            TempData[WebConstants.SuccessMessageKey] = "The product was removed from your order. Now you can proceed to pay or continue to customize your order.";
+            return RedirectToAction(nameof(Details), new { id = invoiceId });
         }
     }
 }
