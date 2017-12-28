@@ -21,6 +21,8 @@ namespace Store.Web.Views.Manage
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
+        public static string ChangePicture => "ChangePicture";
+
         public static string SetAddressNavClass(ViewContext viewContext) => PageNavClass(viewContext, SetAddress);
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
@@ -30,7 +32,9 @@ namespace Store.Web.Views.Manage
         public static string ExternalLoginsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ExternalLogins);
 
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
-    
+
+        public static string ChangePictureNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePicture);
+
         public static string PageNavClass(ViewContext viewContext, string page)
         {
             var activePage = viewContext.ViewData["ActivePage"] as string;

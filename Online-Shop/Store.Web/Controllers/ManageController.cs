@@ -195,6 +195,12 @@
                 return RedirectToAction("Details", "User");
             }
 
+            if (Request.Form.Files.Count == 0)
+            {
+                TempData[WebConstants.DangerMessageKey] = "There was not submitted neither image nor a link to one!";
+                return View();
+            }
+
             var image = Request.Form.Files[0];
 
             var username = this.userManager.GetUserName(User);
@@ -210,10 +216,10 @@
                 return View();
             }
 
-                await this.userService.SetAvatar(picturePath, userId);
+            await this.userService.SetAvatar(picturePath, userId);
 
-                return RedirectToAction("Details", "User");
-            }
+            return RedirectToAction("Details", "User");
+        }
 
         [HttpGet]
         public async Task<IActionResult> SetPassword()
