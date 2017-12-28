@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Store.Data.Models;
     using Store.Services.Models.ProductViewModels;
+    using Store.Data.Models.Enums;
 
     public interface IProductService
     {
@@ -16,5 +17,10 @@
         Task<Product> Edit(EditProductViewModel newProductData, string requestUserId);
 
         IEnumerable<Product> ProductsBySeller(string sellerId);
+
+        List<Product> AllProductsForSale();
+
+        List<Product> ProductsByCategory(Category category);
+
     }
 }

@@ -1,0 +1,58 @@
+﻿@model List<CatalogProductViewModel>
+
+@{
+    ViewData["Title"] = "All products for sale.";
+}
+<link rel="stylesheet" href="~/css/site.css" />
+<div class="container">
+<br />
+<br />
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-3">
+                <input type="text" size="10"/>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col-xs-6 dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categories
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Accessories">Accessories</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Exterior">Exterior</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Interior">Interior</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Lighting">Lighting</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Tunning">Tunning</a>
+                </ul>
+            </div>
+        </div>
+    </div>
+        <br />
+        <br />
+    @if (Model.Count() != 0)
+    {
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+            @foreach (var product in Model)
+                {
+                <tr>
+                    <th>@product.Title</th>
+                    <th>@product.Price</th>
+                    <th>@product.Quantity</th>
+                    <th>
+                        <a href="~/Product/Details?id=@product.Id" class="btn btn-default">Details</a>
+                    </th>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h2>No products for sale in this category.</h2>
+    }
+</div>

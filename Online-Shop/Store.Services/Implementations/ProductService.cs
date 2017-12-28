@@ -10,6 +10,7 @@
     using Store.Services.Models.ProductViewModels;
     using System.Collections.Generic;
     using System.Linq;
+    using Store.Data.Models.Enums;
 
     public class ProductService : IProductService
     {
@@ -93,6 +94,8 @@
         public IEnumerable<Product> ProductsBySeller(string sellerId) => this.db.Products
             .Where(p => p.SellerId == sellerId);
 
+        public List<Product> AllProductsForSale() => this.db.Products.ToList();
+
         private async Task SetChangedValuesAsync(Product productToEdit, EditProductViewModel newProductData)
         {
             if (!newProductData.Title.Equals(productToEdit.Title, StringComparison.OrdinalIgnoreCase))
@@ -136,5 +139,7 @@
                 productToEdit.Category = newProductData.Category;
             }
         }
+
+        public List<Product> ProductsByCategory(Category category) => this.db.Products.Where(p => p.Category.Equals(category)).ToList();
     }
 }

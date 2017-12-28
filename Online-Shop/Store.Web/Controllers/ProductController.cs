@@ -10,6 +10,9 @@
     using Store.Web.Models.ProductViewModels;
     using System;
     using System.Threading.Tasks;
+    using AutoMapper.QueryableExtensions;
+    using System.Collections.Generic;
+    using Store.Data.Models.Enums;
 
     public class ProductController : Controller
     {
@@ -17,7 +20,7 @@
         private readonly IInvoiceService invoiceService;
         private readonly UserManager<User> userManager;
 
-        public ProductController(UserManager<User> userManager, 
+        public ProductController(UserManager<User> userManager,
             IProductService productService,
             IInvoiceService invoiceService)
         {
@@ -25,7 +28,7 @@
             this.productService = productService;
             this.invoiceService = invoiceService;
         }
-        
+
         [Authorize]
         public async Task<IActionResult> Create()
         {
@@ -96,7 +99,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Delete (int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var productToDelete = await this.productService.GetProduct(id);
 
@@ -126,6 +129,34 @@
             var mapped = Mapper.Map<DetailsProductViewModel>(product);
 
             return View(nameof(Details), mapped);
+        }
+
+        public IActionResult ProductsForSale()
+        {
+            var products = this.productService.AllProductsForSale();
+
+            var mapped = new List<CatalogProductViewModel>();
+
+            foreach (var product in products)
+            {
+                mapped.Add(Mapper.Map<CatalogProductViewModel>(product));
+            }
+
+            return View(mapped);
+        }
+
+        public IActionResult ProductsByCategory(Category category)
+        {
+            var productsByCategory = this.productService.ProductsByCategory(category);
+
+            var mapped = new List<CatalogProductViewModel>();
+
+            foreach (var product in productsByCategory)
+            {
+                mapped.Add(Mapper.Map<CatalogProductViewModel>(product));
+            }
+
+            return View(nameof(ProductsForSale), mapped);
         }
 
         [Authorize]
