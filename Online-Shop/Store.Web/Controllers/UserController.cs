@@ -1,16 +1,14 @@
-﻿﻿namespace Store.Web.Controllers
+﻿namespace Store.Web.Controllers
 {
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
     using Store.Services.Models.AddressViewModels;
-    using Store.Web.Models.UserViewModels;
     using Store.Web.Models.ProductViewModels;
-    using System.Linq;
+    using Store.Web.Models.UserViewModels;
     using System.Threading.Tasks;
 
     public class UserController : Controller
@@ -44,6 +42,8 @@
 
         public async Task<IActionResult> AllProducts(string sellerId)
         {
+            var requestSenderId = this.userManager.GetUserId(User);
+
             if (sellerId == null)
             {
                 if (!User.Identity.IsAuthenticated)
@@ -51,7 +51,7 @@
                     return BadRequest();
                 }
 
-                sellerId = this.userManager.GetUserId(User);
+                sellerId = requestSenderId;
             }
 
             var products = this.productService.ProductsBySeller(sellerId);
@@ -60,7 +60,9 @@
             var mappedProducts = Mapper.Map<DetailsProductViewModel[]>(products);
             var productsToShow = new UserProductsListViewModel
             {
+                SellerId = seller.Id,
                 SellerUserName = seller.UserName,
+                IsRequestSenderOwner = sellerId == requestSenderId,
                 ProductsToSell = mappedProducts
             };
 

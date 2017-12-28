@@ -5,9 +5,11 @@
 
     public class UserProductsListViewModel
     {
-        public int Id { get; set; }
+        public string SellerId { get; set; }
 
         public string SellerUserName { get; set; }
+
+        public bool IsRequestSenderOwner { get; set; }
 
         public ICollection<DetailsProductViewModel> ProductsToSell { get; set; }
     }
