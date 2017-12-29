@@ -5,7 +5,7 @@
 }
 <div class="container">
     <h2>
-        <a asp-action="Details" asp-route-sellerId="@Model.SellerId">@Model.SellerUserName</a> products for sale:
+        <a asp-action="Details" asp-route-userId="@Model.SellerId">@Model.SellerUserName</a> products for sale:
     </h2>
 
     @if (Model.ProductsToSell.Count() != 0)
