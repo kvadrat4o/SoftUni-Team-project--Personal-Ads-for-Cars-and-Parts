@@ -53,6 +53,8 @@
 
         public async Task<Product> GetProduct(int id) => await db.Products.FindAsync(id);
 
+        public async Task<Product> GetProduct(string title) => await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
+
         private async Task<bool> TryPayListingTaxAsync(string sellerId)
         {
             var seller = await this.db.Users.FindAsync(sellerId);

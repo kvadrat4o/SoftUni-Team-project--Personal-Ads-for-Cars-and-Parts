@@ -159,6 +159,19 @@
             return View(nameof(ProductsForSale), mapped);
         }
 
+        public IActionResult SearchProductByTitle(string title)
+        {
+            var product = this.productService.GetProduct(title);
+
+            if (product == null)
+            {
+                TempData[WebConstants.DangerMessageKey] = "There is no such product.";
+
+                return View();
+            }
+            return RedirectToAction("Details", product);
+        }
+        
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Buy(int productId, int quantity)

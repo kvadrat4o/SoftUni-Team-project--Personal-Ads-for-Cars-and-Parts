@@ -11,8 +11,10 @@
         Task<string> CreateAsync(Product product);
 
         void Delete(Product product);
-        
+
         Task<Product> GetProduct(int id);
+
+        Task<Product> GetProduct(string title);
 
         Task<Product> Edit(EditProductViewModel newProductData, string requestUserId);
 

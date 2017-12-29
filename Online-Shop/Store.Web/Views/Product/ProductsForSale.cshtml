@@ -9,10 +9,12 @@
 <br />
     <div class="container">
         <div class="row">
-            <div class="col-xs-3">
-                <input type="text" size="10"/>
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
+            <form action="SearchProductByTitle">
+                <div class="col-xs-4">
+                    <input type="text" id="title" name="title" size="35"/>
+                    <button type="submit" class="btn btn-primary" value="Submit">Search</button>
+                </div>
+            </form>
             <div class="col-xs-6 dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Categories
