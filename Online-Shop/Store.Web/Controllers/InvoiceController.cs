@@ -15,12 +15,15 @@
     {
         private readonly UserManager<User> userManager;
         private readonly IInvoiceService invoiceService;
+        private readonly IProductService productService;
 
         public InvoiceController(UserManager<User> userManager,
-            IInvoiceService invoiceService)
+            IInvoiceService invoiceService,
+            IProductService productService)
         {
             this.userManager = userManager;
             this.invoiceService = invoiceService;
+            this.productService = productService;
         }
 
         public async Task<IActionResult> Details(int id)
@@ -30,6 +33,21 @@
             {
                 TempData[WebConstants.DangerMessageKey] = "This invoice does not exists!";
                 return RedirectToAction("Index", "Home");
+            }
+
+            if (!invoice.IsPayed)
+            {
+                try
+                {
+                    foreach (var ip in invoice.InvoiceProducts)
+                    {
+                        await this.invoiceService.CheckProductQuantityAsync(ip, invoice.Id);
+                    }
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    TempData[WebConstants.DangerMessageKey] = ioe.Message;
+                }
             }
 
             var model = Mapper.Map<InvoiceViewModel>(invoice);
@@ -92,6 +110,36 @@
 
             TempData[WebConstants.SuccessMessageKey] = "The product was removed from your order. Now you can proceed to pay or continue to customize your order.";
             return RedirectToAction(nameof(Details), new { id = invoiceId });
+        }
+
+        public async Task<IActionResult> AddProduct(int productId, int quantity)
+        {
+            var product = await this.productService.GetProductAsync(productId);
+            if (product == null)
+            {
+                TempData[WebConstants.DangerMessageKey] = "Thes product does not exists";
+                return RedirectToAction("Index", "Home");
+            }
+            else if (product.Quantity == 0)
+            {
+                TempData[WebConstants.DangerMessageKey] = "This product ended! You can search for it from another seller.";
+                return RedirectToAction("ProductsByCategory", "Product", new { category = product.Category });
+            }
+            else if (quantity <= 0)
+            {
+                TempData[WebConstants.DangerMessageKey] = "Quantity must be greater than zero!";
+                return RedirectToAction("Details", "Product", new { id = productId, title = product.Title });
+            }
+            else if (product.Quantity < quantity)
+            {
+                TempData[WebConstants.DangerMessageKey] = $"Currently the maximum quantity is {product.Quantity}! If you need more, you can contact the seller to ask for new charge.";
+                return RedirectToAction("Details", "Product", new { id = productId, title = product.Title });
+            }
+
+            var userId = this.userManager.GetUserId(User);
+            var invoice = await this.invoiceService.AddProductAsync(product, userId, quantity);
+
+            return RedirectToAction(nameof(Details), new { id = invoice.Id });
         }
     }
 }

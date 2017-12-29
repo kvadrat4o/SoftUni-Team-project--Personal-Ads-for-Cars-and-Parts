@@ -66,7 +66,7 @@
         [Authorize]
         public async Task<IActionResult> Edit(int id, string title)
         {
-            var product = await this.productService.GetProduct(id);
+            var product = await this.productService.GetProductAsync(id);
 
             if (!product.Title.Equals(title))
             {
@@ -105,7 +105,7 @@
         [Authorize]
         public async Task<IActionResult> Delete(int id, string title)
         {
-            var product = await this.productService.GetProduct(id);
+            var product = await this.productService.GetProductAsync(id);
 
             if (!product.Title.Equals(title))
             {
@@ -126,7 +126,7 @@
 
         public async Task<IActionResult> Details(int id, string title)
         {
-            var product = await this.productService.GetProduct(id);
+            var product = await this.productService.GetProductAsync(id);
 
             if (!product.Title.Equals(title) || product == null)
             {
@@ -168,7 +168,7 @@
 
         public IActionResult SearchProductByTitle(string title)
         {
-            var product = this.productService.GetProduct(title);
+            var product = this.productService.GetProductAsync(title);
 
             if (product == null)
             {
@@ -189,7 +189,7 @@
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
 
-            var product = await this.productService.GetProduct(productId);
+            var product = await this.productService.GetProductAsync(productId);
             if (product == null)
             {
                 return BadRequest();
@@ -225,7 +225,7 @@
             }
 
             var invoice = await this.invoiceService.CreateInvoiceAsync(buyerId);
-            await this.invoiceService.AddProduct(product, quantity, invoice);
+            await this.invoiceService.AddProductAsync(product, quantity, invoice);
 
             return RedirectToAction("Pay", "Invoice", new { id = invoice.Id });
         }

@@ -32,21 +32,30 @@
             => await this.db.Invoices
             .FirstOrDefaultAsync(i => i.Id == invoiceId && i.BuyerId == userId) != null;
 
-        public async Task<bool> IsPayedAsync(int invoiceId) 
+        public async Task<bool> IsPayedAsync(int invoiceId)
             => (await this.db.Invoices.FindAsync(invoiceId)).IsPayed;
 
-        public async Task AddProduct(Product product, int quantity, Invoice invoice)
+        public async Task AddProductAsync(Product product, int quantity, Invoice invoice)
         {
             if (quantity <= 0)
             {
                 throw new InvalidOperationException("Quantity cannot be neither less than nor equal to 0");
             }
 
-            invoice.InvoiceProducts.Add(new ProductInvoice
+            var invoiceProduct = invoice.InvoiceProducts.FirstOrDefault(ip => ip.Product.Id == product.Id);
+            if (invoiceProduct == null)
             {
-                ProductId = product.Id,
-                Quantity = quantity
-            });
+                invoice.InvoiceProducts.Add(new ProductInvoice
+                {
+                    InvoiceId = invoice.Id,
+                    ProductId = product.Id,
+                    Quantity = quantity
+                });
+            }
+            else
+            {
+                invoiceProduct.Quantity += quantity;
+            }
 
             await this.db.SaveChangesAsync();
         }
@@ -62,25 +71,27 @@
 
         public async Task PayInvoiceAsync(int invoiceId)
         {
-            var invoice = await this.db.Invoices.FindAsync(invoiceId);
-                //.Include(i => i.InvoiceProducts)
-                //    .ThenInclude(ip => ip.Product)
-                //.FirstOrDefaultAsync(i => i.Id == invoiceId);
+            var invoice = await this.db.Invoices
+                .Include(i => i.Buyer)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId);
 
             if (invoice.IsPayed)
             {
                 throw new InvalidOperationException("This invoice is already payed");
             }
-
-            var buyer = await this.db.Users.FindAsync(invoice.BuyerId);
-            if (buyer.MoneyBalance < invoice.TotalValue)
+            else if (invoice.Buyer.MoneyBalance < invoice.TotalValue)
             {
                 throw new InvalidOperationException("You have not enough money!");
             }
 
             var shippingRecords = await this.CreateShippingRecordAsync(invoice);
 
-            buyer.MoneyBalance -= invoice.TotalValue;
+            foreach (var ip in invoice.InvoiceProducts)
+            {
+                ip.Product.Quantity -= ip.Quantity;
+            }
+
+            invoice.Buyer.MoneyBalance -= invoice.TotalValue;
             invoice.IssueDate = DateTime.Now;
             invoice.IsPayed = true;
             await this.db.ShippingRecords.AddRangeAsync(shippingRecords);
@@ -92,7 +103,7 @@
             var shippingRecords = new List<ShippingRecord>();
             foreach (var ip in invoice.InvoiceProducts)
             {
-                await this.CheckProductQuantityAsync(ip, invoice);
+                await this.CheckProductQuantityAsync(ip, invoice.InvoiceProducts.Count);
 
                 shippingRecords.Add(new ShippingRecord
                 {
@@ -100,14 +111,12 @@
                     ProductId = ip.ProductId,
                     Quantity = ip.Quantity
                 });
-
-                ip.Product.Quantity -= ip.Quantity;
             }
 
             return shippingRecords;
         }
 
-        private async Task CheckProductQuantityAsync(ProductInvoice invoiceProduct, Invoice invoice)
+        public async Task CheckProductQuantityAsync(ProductInvoice invoiceProduct, int productsCount)
         {
             if (invoiceProduct.Product.Quantity >= invoiceProduct.Quantity)
             {
@@ -119,9 +128,9 @@
             if (invoiceProduct.Product.Quantity == 0)
             {
                 errorMessage = $"We are sorry. Product {invoiceProduct.Product.Title} ended and we removed it from your order!";
-                if (invoice.InvoiceProducts.Count > 1)
+                if (productsCount > 1)
                 {
-                    string.Concat(errorMessage, " If you still want to pay for the rest of your items you can do it now.");
+                    string.Concat(errorMessage, " If you still want to complete the payment, you can pay now.");
                 }
 
                 this.db.ProductsInvoices.Remove(invoiceProduct);
@@ -158,6 +167,22 @@
 
             this.db.Invoices.Remove(invoice);
             await this.db.SaveChangesAsync();
+        }
+
+        public async Task<Invoice> AddProductAsync(Product product, string userId, int quantity)
+        {
+            var invoice = this.db.Invoices
+                .Include(i => i.InvoiceProducts)
+                    .ThenInclude(ip => ip.Product)
+                .FirstOrDefault(i => i.BuyerId == userId && ! i.IsPayed);
+            if (invoice == null)
+            {
+                invoice = await this.CreateInvoiceAsync(userId);
+            }
+
+            await this.AddProductAsync(product, quantity, invoice);
+
+            return invoice;
         }
     }
 }

@@ -51,9 +51,9 @@
             db.SaveChanges();
         }
 
-        public async Task<Product> GetProduct(int id) => await db.Products.FindAsync(id);
+        public async Task<Product> GetProductAsync(int id) => await db.Products.FindAsync(id);
 
-        public async Task<Product> GetProduct(string title) => await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
+        public async Task<Product> GetProductAsync(string title) => await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
 
         private async Task<bool> TryPayListingTaxAsync(string sellerId)
         {
@@ -80,7 +80,7 @@
 
         public async Task<Product> Edit(EditProductViewModel newProductData, string requestUserId)
         {
-            var productToEdit = await this.GetProduct(newProductData.Id);
+            var productToEdit = await this.GetProductAsync(newProductData.Id);
             if (requestUserId != productToEdit.SellerId)
             {
                 throw new InvalidOperationException("You are not allowed to edit a product which is not created by you!");
