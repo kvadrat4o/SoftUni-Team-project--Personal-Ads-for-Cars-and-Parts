@@ -5,14 +5,13 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Store.Data.Models;
+    using Store.Data.Models.Enums;
     using Store.Services.Interfaces;
     using Store.Services.Models.ProductViewModels;
     using Store.Web.Models.ProductViewModels;
     using System;
-    using System.Threading.Tasks;
-    using AutoMapper.QueryableExtensions;
     using System.Collections.Generic;
-    using Store.Data.Models.Enums;
+    using System.Threading.Tasks;
 
     public class ProductController : Controller
     {
@@ -65,9 +64,14 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, string title)
         {
             var product = await this.productService.GetProduct(id);
+
+            if (!product.Title.Equals(title))
+            {
+                return NotFound();
+            }
 
             var requestUserId = this.userManager.GetUserId(User);
 
@@ -99,29 +103,32 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, string title)
         {
-            var productToDelete = await this.productService.GetProduct(id);
+            var product = await this.productService.GetProduct(id);
+
+            if (!product.Title.Equals(title))
+            {
+                return NotFound();
+            }
 
             var userId = this.userManager.GetUserId(User);
-            if (productToDelete == null || productToDelete.SellerId != userId)
+            if (product == null || product.SellerId != userId)
             {
                 return BadRequest();
             }
 
-            var title = productToDelete.Title;
-
-            this.productService.Delete(productToDelete);
-            TempData[WebConstants.SuccessMessageKey] = $"Product {productToDelete.Title} was succcesfully deleted.";
+            this.productService.Delete(product);
+            TempData[WebConstants.SuccessMessageKey] = $"Product {title} was succcesfully deleted.";
 
             return RedirectToAction("AllProducts", "User");
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string title)
         {
             var product = await this.productService.GetProduct(id);
 
-            if (product == null)
+            if (!product.Title.Equals(title) || product == null)
             {
                 return NotFound();
             }

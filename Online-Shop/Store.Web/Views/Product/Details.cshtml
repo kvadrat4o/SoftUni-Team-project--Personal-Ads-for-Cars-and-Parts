@@ -25,7 +25,8 @@
     <div class="col-md-4">
         <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" name="productId" value="@Model.Id" />
+            @Html.RouteLink("CustomRoute", "/Product/Details/{id}/title", new { Id = Model.Id, Title = Model.Title })
+            <input type="hidden" asp-for="Id" name="productId" />
             <div class="form-group">
                 <label>Quantity</label>
                 <input class="form-control" type="number" data-val="true" data-val-range="The field Quantity must be between 1 and 2147483647." data-val-range-max="2147483647" data-val-range-min="1" data-val-required="The Quantity field is required." id="quantity" name="quantity" value="0">

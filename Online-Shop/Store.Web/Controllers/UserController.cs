@@ -40,29 +40,24 @@
             return RedirectToAction("Details");
         }
 
-        public async Task<IActionResult> AllProducts(string sellerId)
+        public async Task<IActionResult> AllProducts()
         {
-            var requestSenderId = this.userManager.GetUserId(User);
 
-            if (sellerId == null)
+            if (!User.Identity.IsAuthenticated)
             {
-                if (!User.Identity.IsAuthenticated)
-                {
-                    return BadRequest();
-                }
-
-                sellerId = requestSenderId;
+                return RedirectToAction("Index", "Home");
             }
 
-            var products = this.productService.ProductsBySeller(sellerId);
-            var seller = await this.userManager.FindByIdAsync(sellerId);
+            var userId = this.userManager.GetUserId(User);
+            var products = this.productService.ProductsBySeller(userId);
+            var seller = await this.userManager.FindByIdAsync(userId);
 
             var mappedProducts = Mapper.Map<DetailsProductViewModel[]>(products);
             var productsToShow = new UserProductsListViewModel
             {
                 SellerId = seller.Id,
                 SellerUserName = seller.UserName,
-                IsRequestSenderOwner = sellerId == requestSenderId,
+                IsRequestSenderOwner = seller.Id == userId,
                 ProductsToSell = mappedProducts
             };
 
