@@ -60,7 +60,7 @@
 
             TempData[WebConstants.SuccessMessageKey] = $"Product {model.Title} is successfully created.";
 
-            return RedirectToAction(nameof(Details), new { id = product.Id });
+            return RedirectToAction(nameof(Details), new { id = product.Id, title = product.Title});
         }
 
         [Authorize]
@@ -68,7 +68,7 @@
         {
             var product = await this.productService.GetProduct(id);
 
-            if (!product.Title.Equals(title))
+            if (!product.Title.Equals(title) || product == null)
             {
                 return NotFound();
             }
@@ -106,6 +106,11 @@
         public async Task<IActionResult> Delete(int id, string title)
         {
             var product = await this.productService.GetProduct(id);
+
+            if (!product.Title.Equals(title) || product == null)
+            {
+                return NotFound();
+            }
 
             if (!product.Title.Equals(title))
             {

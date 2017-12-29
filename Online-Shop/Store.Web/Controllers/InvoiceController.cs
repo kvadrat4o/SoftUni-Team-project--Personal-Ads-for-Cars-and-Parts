@@ -15,12 +15,15 @@
     {
         private readonly UserManager<User> userManager;
         private readonly IInvoiceService invoiceService;
+        private readonly IProductService productService;
 
         public InvoiceController(UserManager<User> userManager,
-            IInvoiceService invoiceService)
+            IInvoiceService invoiceService,
+            IProductService productService)
         {
             this.userManager = userManager;
             this.invoiceService = invoiceService;
+            this.productService = productService;
         }
 
         public async Task<IActionResult> Details(int id)
