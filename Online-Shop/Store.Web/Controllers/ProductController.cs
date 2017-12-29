@@ -60,7 +60,7 @@
 
             TempData[WebConstants.SuccessMessageKey] = $"Product {model.Title} is successfully created.";
 
-            return RedirectToAction(nameof(Details), new { id = product.Id, title = product.Title});
+            return RedirectToAction(nameof(Details), new { id = product.Id, title = product.Title });
         }
 
         [Authorize]
@@ -183,7 +183,7 @@
             }
             return RedirectToAction("Details", product);
         }
-        
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Buy(int productId, int quantity)
@@ -202,31 +202,31 @@
             else if (!product.IsActive)
             {
                 TempData[WebConstants.DangerMessageKey] = "This listing is not active. Please try again later or try find the product from other seller";
-                return RedirectToAction(nameof(Details), new { id = productId });
+                return RedirectToAction(nameof(Details), new { id = productId, title = product.Title });
             }
             else if (product.Quantity == 0)
             {
                 TempData[WebConstants.DangerMessageKey] = $"This product ended. We are sorry. You can contact the seller to ask for next charge.";
-                return RedirectToAction(nameof(Details), new { id = productId });
+                return RedirectToAction(nameof(Details), new { id = productId, title = product.Title });
             }
             else if (product.Quantity < quantity)
             {
                 TempData[WebConstants.DangerMessageKey] = $"Available quantity is {product.Quantity}. If you need bigger quantity than {product.Quantity} you can contact the seller or search for other sellers with the same product.";
-                return RedirectToAction(nameof(Details), new { id = productId });
+                return RedirectToAction(nameof(Details), new { id = productId, title = product.Title });
             }
 
             var buyerId = this.userManager.GetUserId(User);
             if (product.SellerId == buyerId)
             {
                 TempData[WebConstants.WarningMessageKey] = "You cannot buy your own product";
-                return RedirectToAction(nameof(Details), new { id = productId });
+                return RedirectToAction(nameof(Details), new { id = productId, title = product.Title });
             }
 
             var buyer = await this.userManager.FindByIdAsync(buyerId);
             if (buyer.MoneyBalance < product.Price * quantity)
             {
                 TempData[WebConstants.DangerMessageKey] = "You have not enough money!";
-                return RedirectToAction(nameof(Details), new { id = productId });
+                return RedirectToAction(nameof(Details), new { id = productId, title = product.Title });
             }
 
             var invoice = await this.invoiceService.CreateInvoiceAsync(buyerId);
