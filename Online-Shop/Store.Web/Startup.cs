@@ -12,6 +12,8 @@
     using Store.Data.Models;
     using Store.Infrastructure.Extensions;
     using Store.Infrastructure.Filters;
+    using Microsoft.AspNetCore.Authentication.Facebook;
+    using Microsoft.AspNetCore.Authentication.Google;
 
     public class Startup
     {
@@ -46,6 +48,18 @@
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                 options.Filters.Add<ValidateModelStateAttribute>();
+            });
+
+            //services.AddAuthentication().AddFacebook(fb =>
+            //{   
+            //    fb.AppId = Configuration["Autheentication:Facebook:AppId"];
+            //    fb.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //});
+
+            services.AddAuthentication().AddGoogle(go =>
+            {
+                go.ClientId = Configuration["Authentication:Google:ClientId"];
+                go.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
         }
 

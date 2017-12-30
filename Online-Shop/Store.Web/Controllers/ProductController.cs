@@ -112,11 +112,6 @@
                 return NotFound();
             }
 
-            if (!product.Title.Equals(title))
-            {
-                return NotFound();
-            }
-
             var userId = this.userManager.GetUserId(User);
             if (product == null || product.SellerId != userId)
             {
