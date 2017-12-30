@@ -4,25 +4,27 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Product: @Model.Title</h2>
-<br />
-<h3>PartNumber: @Model.PartNumber</h3>
-<br />
-<h4>Descrioption:</h4>
-<br />
-<h4>@Model.Description</h4>
-<br />
-<br />
-<h4>Quantity: @Model.Quantity</h4>
-<br />
-<h4>@string.Format("{0:C}", Model.Price) per piece</h4>
-<br />
-<a asp-controller="User" asp-action="AllProducts" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
-
-<br /><br />
+<h1 class="text-center">@Model.Title</h1>
 
 <div class="row">
+    <div class="col-md-6 text-center">
+        <span>
+            @{
+                var picture = @Model.PicturePath ?? $"../{WebConstants.FullLogoPath}";
+                var style = @Model.PicturePath == null ? "half-transperacy" : string.Empty;
+            }
+            <img src="@picture" class="img-responsive img-thumbnail float-left @style">
+        </span>
+    </div>
     <div class="col-md-4">
+        <div>
+            <h3>
+                Price: <b>@string.Format("{0:C}", Model.Price)</b>
+            </h3>
+            <p>
+                Available quantity: @Model.Quantity
+            </p>
+        </div>
         <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" name="productId" />
@@ -35,6 +37,13 @@
         </form>
     </div>
 </div>
+
+<h3>PartNumber: <strong>@Model.PartNumber</strong></h3>
+<h3 class="text-center">Descrioption:</h3>
+<p>@Model.Description</p>
+<br />
+<a asp-controller="User" asp-action="AllProducts" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
+
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

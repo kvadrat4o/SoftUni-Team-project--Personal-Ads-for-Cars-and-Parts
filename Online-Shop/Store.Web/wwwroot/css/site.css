@@ -3,6 +3,15 @@
     padding-bottom: 20px;
 }
 
+.float-left {
+    float: left;
+    margin: 10px;
+}
+
+.half-transperacy {
+    opacity: 0.3;
+}
+
 .dropzone {
     width: 200px;
     height: 100px;
