@@ -8,6 +8,7 @@
         <div>
             <p><b>Name</b></p>
             <p>@Model.FirstName @Model.LastName</p>
+            <p><b>Balance: @Model.MoneyBalance</b></p>
         </div>
         @if (Model.Address != null)
         {
@@ -21,6 +22,7 @@
         }
         <div>
             <p><b>Sold items:</b> @Model.SoldItemsCount</p>
+
             <a asp-controller="Manage" asp-action="Index" class="btn btn-default">Account Setting</a>
         </div>
     </div>

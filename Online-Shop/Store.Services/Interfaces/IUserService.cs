@@ -12,5 +12,7 @@
         UserDetailsViewModel GetUserDetailsModel(string userId);
 
         Task SetAvatar(string picturePath, string userId);
+
+        Task AddMoneyToUserBalance(decimal money, string userId);
     }
 }

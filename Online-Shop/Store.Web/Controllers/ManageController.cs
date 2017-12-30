@@ -287,6 +287,18 @@
         }
 
         [HttpGet]
+        public IActionResult AddMoneyToBalance() => View();
+
+        [HttpPost]
+        public IActionResult AddMoneyToBalance(AddMoneyToBalanceViewModel model)
+        {
+            var userId = this.userManager.GetUserId(User);
+            this.userService.AddMoneyToUserBalance(model.MoneyBalance, userId);
+            return RedirectToAction("Details", "User");
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> ExternalLogins()
         {
             var user = await userManager.GetUserAsync(User);

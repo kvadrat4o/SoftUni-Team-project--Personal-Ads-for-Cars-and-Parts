@@ -43,6 +43,7 @@
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Username = u.UserName,
+                    MoneyBalance = u.MoneyBalance,
                     Avatar = u.Avatar,
                     SoldItemsCount = u.ProductsToSell
                         .Select(p => p.TimesSold)
@@ -67,9 +68,12 @@
             await this.db.SaveChangesAsync();
         }
 
-        public Task SetPictureAvatar(string picturePath, string userId)
+        public async Task AddMoneyToUserBalance(decimal money, string userId)
         {
-            return null;
+            var user = this.db.Users.Find(userId);
+            user.MoneyBalance += money;
+            await this.db.SaveChangesAsync();
         }
+
     }
 }

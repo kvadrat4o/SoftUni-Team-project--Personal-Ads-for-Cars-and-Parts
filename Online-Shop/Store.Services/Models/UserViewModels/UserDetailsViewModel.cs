@@ -29,6 +29,9 @@
         [Display(Name = "Sold Items")]
         public int SoldItemsCount { get; set; }
 
+        [Range(MoneyMinValue, MoneyMaxValue)]
+        public decimal MoneyBalance { get; set; }
+
         public AddressViewModel Address { get; set; }
     }
 }

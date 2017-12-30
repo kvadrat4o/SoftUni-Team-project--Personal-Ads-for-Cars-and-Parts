@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-
-namespace Store.Web.Views.Manage
+﻿namespace Store.Web.Views.Manage
 {
+    using System;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
     public static class ManageNavPages
     {
         public static string ActivePageKey => "ActivePage";
+
+        public static string AddMoneyToBalance = "AddMoneyToBalance";
 
         public static string Index => "Index";
 
@@ -22,6 +21,8 @@ namespace Store.Web.Views.Manage
         public static string ExternalLogins => "ExternalLogins";
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
+
+        public static string AddMoneyToBalanceNavClass(ViewContext viewContext) => PageNavClass(viewContext, AddMoneyToBalance);
 
         public static string SetAddressNavClass(ViewContext viewContext) => PageNavClass(viewContext, SetAddress);
 
