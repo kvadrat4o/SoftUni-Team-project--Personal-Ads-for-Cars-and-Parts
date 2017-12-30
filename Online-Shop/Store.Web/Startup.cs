@@ -50,11 +50,11 @@
                 options.Filters.Add<ValidateModelStateAttribute>();
             });
 
-            //services.AddAuthentication().AddFacebook(fb =>
-            //{   
-            //    fb.AppId = Configuration["Autheentication:Facebook:AppId"];
-            //    fb.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //});
+            services.AddAuthentication().AddFacebook(fb =>
+            {
+                fb.AppId = "522011194845710";
+                fb.AppSecret = "53d9cca0f3dddfbdee12ddbf51323763";
+            });
 
             services.AddAuthentication().AddGoogle(go =>
             {
