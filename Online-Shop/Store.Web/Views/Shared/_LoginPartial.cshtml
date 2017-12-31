@@ -9,14 +9,13 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-
                 <div class="dropdown">
                     <button class="btn btn-link navbar-btn navbar-link" type="button" id="menu1" data-toggle="dropdown">
                         @UserManager.GetUserName(User)
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                        <li role="presentation"><a asp-area="" asp-controller="User" asp-action="Details" title="Profile" role="menuitem" tabindex="-1">@UserManager.GetUserName(User)</a></li>
+                        <li role="presentation"><a asp-area="" asp-controller="User" asp-action="Details" title="Profile" role="menuitem" tabindex="-1">Account</a></li>
                         <li role="presentation" class="divider"></li>
                         <li role="presentation"><a asp-area="" asp-controller="User" asp-action="ProductsForSale">My Products</a></li>
                         <li role="presentation"><a asp-area="" asp-controller="Invoice" asp-action="ListOrders">Orders</a></li>
