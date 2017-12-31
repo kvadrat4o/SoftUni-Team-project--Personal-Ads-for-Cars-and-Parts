@@ -20,7 +20,7 @@
             </li>
         }
 
-        @for (int i = 1; i <= Math.Max(Model.AllPages, ServiceConstants.PageSize); i++)
+        @for (int i = 1; i <= Math.Min(Model.AllPages, ServiceConstants.PageSize); i++)
         {
             if (i == Model.CurrentPage)
             {
