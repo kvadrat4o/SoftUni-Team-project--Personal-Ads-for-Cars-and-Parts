@@ -66,18 +66,15 @@
         [Authorize]
         public async Task<IActionResult> Edit(int id, string title)
         {
-            var product = await this.productService.GetProductAsync(id);
+            var requestUserId = this.userManager.GetUserId(User);
 
-            if (!product.Title.Equals(title) || product == null)
+            var model = await this.productService.GetProductAsync<EditProductViewModel>(id, requestUserId);
+            if (model == null || !model.Title.Equals(title))
             {
                 return NotFound();
             }
 
-            var requestUserId = this.userManager.GetUserId(User);
-
-            var mappedProduct = Mapper.Map<EditProductViewModel>(product);
-
-            return View(mappedProduct);
+            return View(model);
         }
 
         [HttpPost]
@@ -105,17 +102,12 @@
         [Authorize]
         public async Task<IActionResult> Delete(int id, string title)
         {
-            var product = await this.productService.GetProductAsync(id);
+            var userId = this.userManager.GetUserId(User);
+            var product = await this.productService.GetProductAsync(id, userId);
 
-            if (!product.Title.Equals(title) || product == null)
+            if (product == null || !product.Title.Equals(title))
             {
                 return NotFound();
-            }
-
-            var userId = this.userManager.GetUserId(User);
-            if (product == null || product.SellerId != userId)
-            {
-                return BadRequest();
             }
 
             this.productService.Delete(product);
@@ -126,16 +118,13 @@
 
         public async Task<IActionResult> Details(int id, string title)
         {
-            var product = await this.productService.GetProductAsync(id);
-
-            if (!product.Title.Equals(title) || product == null)
+            var model = await this.productService.GetProductAsync<DetailsProductViewModel>(id);
+            if (model == null || !model.Title.Equals(title))
             {
                 return NotFound();
             }
 
-            var mapped = Mapper.Map<DetailsProductViewModel>(product);
-
-            return View(nameof(Details), mapped);
+            return View(nameof(Details), model);
         }
 
         public IActionResult ProductsForSale()
@@ -189,7 +178,7 @@
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
 
-            var product = await this.productService.GetProductAsync(productId);
+            var product = await this.productService.GetProductAsync<Product>(productId);
             if (product == null)
             {
                 return BadRequest();

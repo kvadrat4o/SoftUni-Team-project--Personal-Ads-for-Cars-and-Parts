@@ -98,7 +98,7 @@
 
         public async Task<IActionResult> AddProduct(int productId, int quantity)
         {
-            var product = await this.productService.GetProductAsync(productId);
+            var product = await this.productService.GetProductAsync<Product>(productId);
             if (product == null)
             {
                 TempData[WebConstants.DangerMessageKey] = "Thes product does not exists";

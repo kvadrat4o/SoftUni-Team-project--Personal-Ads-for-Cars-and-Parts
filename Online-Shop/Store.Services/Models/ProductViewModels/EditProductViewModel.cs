@@ -3,8 +3,10 @@
     using Store.Data.Models.Enums;
     using static Store.Data.ModelConstants;
     using System.ComponentModel.DataAnnotations;
+    using Store.Helpers.Interfaces.Mapping;
+    using Store.Data.Models;
 
-    public class EditProductViewModel
+    public class EditProductViewModel : IMapFrom<Product>
     {
         public int Id { get; set; }
 

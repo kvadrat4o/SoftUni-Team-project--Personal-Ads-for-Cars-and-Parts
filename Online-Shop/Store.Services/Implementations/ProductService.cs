@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Store.Data.Models.Enums;
+    using AutoMapper.QueryableExtensions;
 
     public class ProductService : IProductService
     {
@@ -51,7 +52,19 @@
             db.SaveChanges();
         }
 
-        public async Task<Product> GetProductAsync(int id) => await db.Products.FindAsync(id);
+        public async Task<TModel> GetProductAsync<TModel>(int id, string sellerId) => await db.Products
+            .Where(p => p.Id == id && p.SellerId == sellerId)
+            .ProjectTo<TModel>()
+            .FirstOrDefaultAsync();
+
+        public async Task<TModel> GetProductAsync<TModel>(int id) => await db.Products
+            .Where(p => p.Id == id)
+            .ProjectTo<TModel>()
+            .FirstOrDefaultAsync();
+
+        public async Task<Product> GetProductAsync(int id, string sellerId) => await db.Products
+            .Where(p => p.Id == id && p.SellerId == sellerId)
+            .FirstOrDefaultAsync();
 
         public async Task<Product> GetProductAsync(string title) => await db.Products.FirstOrDefaultAsync(p => p.Title.Equals(title));
 
@@ -80,14 +93,13 @@
 
         public async Task<Product> Edit(EditProductViewModel newProductData, string requestUserId)
         {
-            var productToEdit = await this.GetProductAsync(newProductData.Id);
+            var productToEdit = await this.db.FindAsync<Product>(newProductData.Id);
             if (requestUserId != productToEdit.SellerId)
             {
                 throw new InvalidOperationException("You are not allowed to edit a product which is not created by you!");
             }
 
             await this.SetChangedValuesAsync(productToEdit, newProductData);
-
             await db.SaveChangesAsync();
 
             return productToEdit;
