@@ -1,4 +1,4 @@
-﻿namespace Store.Web.Models.InvoiceViewModels
+﻿namespace Store.Services.Models.InvoiceViewModels
 {
     using AutoMapper;
     using Store.Data.Models;

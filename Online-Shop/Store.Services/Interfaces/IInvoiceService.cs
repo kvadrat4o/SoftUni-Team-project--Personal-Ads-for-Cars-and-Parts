@@ -1,7 +1,7 @@
 ﻿namespace Store.Services.Interfaces
 {
     using Store.Data.Models;
-    using System.Collections.Generic;
+    using Store.Services.Models.InvoiceViewModels;
     using System.Threading.Tasks;
 
     public interface IInvoiceService
@@ -14,7 +14,7 @@
 
         Task AddProductAsync(Product product, int quantity, Invoice invoice);
 
-        Task<Invoice> GetInvoiceWithNavPropsAsync(int id);
+        Task<InvoiceViewModel> GetInvoiceAsync(int id);
 
         Task PayInvoiceAsync(int invoiceId);
 
@@ -28,6 +28,6 @@
 
         Task<Invoice> AddProductAsync(Product product, string userId, int quantity);
 
-        Invoice[] GetInvoicesByBuyer(string userId, int page);
+        Paginator<ListOrdersViewModel[]> GetInvoicesByBuyer(string userId, int page);
     }
 }

@@ -1,6 +1,4 @@
-﻿using Store.Services;
-
-namespace Store.Web.Models
+﻿namespace Store.Services
 {
     public class Paginator<TModel>
     {

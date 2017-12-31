@@ -1,4 +1,4 @@
-﻿namespace Store.Web.Models.InvoiceViewModels
+﻿namespace Store.Services.Models.InvoiceViewModels
 {
     using AutoMapper;
     using Store.Data;
@@ -15,7 +15,7 @@
 
         public decimal NetPrice => this.Price * (1 - ModelConstants.VAT / 100);
 
-        public string PicturePath { get; set; } = WebConstants.FullLogoPath;
+        public string PicturePath { get; set; } = ServiceConstants.DefaultProductImage;
 
         public bool IsNew { get; set; }
 

@@ -1,9 +1,11 @@
 ﻿namespace Store.Services.Implementations
 {
+    using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
     using Store.Data;
     using Store.Data.Models;
     using Store.Services.Interfaces;
+    using Store.Services.Models.InvoiceViewModels;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,13 +62,8 @@
             await this.db.SaveChangesAsync();
         }
 
-        public async Task<Invoice> GetInvoiceWithNavPropsAsync(int id) => await this.db.Invoices
-            .Include(i => i.Buyer)
-                .ThenInclude(b => b.Address)
-                    .ThenInclude(a => a.Town)
-                    .ThenInclude(a => a.Country)
-            .Include(i => i.InvoiceProducts)
-                .ThenInclude(ip => ip.Product)
+        public async Task<InvoiceViewModel> GetInvoiceAsync(int id) => await this.db.Invoices
+            .ProjectTo<InvoiceViewModel>()
             .FirstOrDefaultAsync(i => i.Id == id);
 
         public async Task PayInvoiceAsync(int invoiceId)
@@ -174,7 +171,7 @@
             var invoice = this.db.Invoices
                 .Include(i => i.InvoiceProducts)
                     .ThenInclude(ip => ip.Product)
-                .FirstOrDefault(i => i.BuyerId == userId && ! i.IsPayed);
+                .FirstOrDefault(i => i.BuyerId == userId && !i.IsPayed);
             if (invoice == null)
             {
                 invoice = await this.CreateInvoiceAsync(userId);
@@ -185,13 +182,27 @@
             return invoice;
         }
 
-        public Invoice[] GetInvoicesByBuyer(string buyerId, int page) => this.db.Invoices
-            .Include(i => i.InvoiceProducts)
-                .ThenInclude(ip => ip.Product)
+        public Paginator<ListOrdersViewModel[]> GetInvoicesByBuyer(string buyerId, int page)
+        {
+            var orders = this.db.Invoices
             .Where(i => i.BuyerId == buyerId)
+            .ProjectTo<ListOrdersViewModel>()
             .OrderByDescending(i => i.IssueDate)
             .Skip((page - 1) * ServiceConstants.PageSize)
             .Take(ServiceConstants.PageSize)
             .ToArray();
+
+            var paginator = new Paginator<ListOrdersViewModel[]>
+            {
+                PageTitle = "Bought Items",
+                Model = orders,
+                CurrentPage = page,
+                AllPages = (int)Math.Ceiling(this.db.Invoices
+                    .Where(i => i.BuyerId == buyerId)
+                    .Count() * 1.0 / ServiceConstants.PageSize)
+            };
+
+            return paginator;
+        }
     }
 }

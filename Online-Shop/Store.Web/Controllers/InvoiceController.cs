@@ -1,16 +1,15 @@
 ﻿namespace Store.Web.Controllers
 {
-    using System;
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Web.Models.InvoiceViewModels;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
+    using Store.Services.Models.InvoiceViewModels;
     using Store.Web.Models;
+    using System;
+    using System.Threading.Tasks;
 
     [Authorize]
     public class InvoiceController : Controller
@@ -30,29 +29,12 @@
 
         public async Task<IActionResult> Details(int id)
         {
-            var invoice = await this.invoiceService.GetInvoiceWithNavPropsAsync(id);
-            if (invoice == null)
+            var model = await this.invoiceService.GetInvoiceAsync(id);
+            if (model == null)
             {
                 TempData[WebConstants.DangerMessageKey] = "This invoice does not exists!";
                 return RedirectToAction("Index", "Home");
             }
-
-            if (!invoice.IsPayed)
-            {
-                try
-                {
-                    foreach (var ip in invoice.InvoiceProducts)
-                    {
-                        await this.invoiceService.CheckProductQuantityAsync(ip, invoice.Id);
-                    }
-                }
-                catch (InvalidOperationException ioe)
-                {
-                    TempData[WebConstants.DangerMessageKey] = ioe.Message;
-                }
-            }
-
-            var model = Mapper.Map<InvoiceViewModel>(invoice);
 
             return View(model);
         }
@@ -61,7 +43,7 @@
         {
             var userId = this.userManager.GetUserId(User);
 
-            var invoice = await this.invoiceService.GetInvoiceWithNavPropsAsync(id);
+            var invoice = await this.invoiceService.GetInvoiceAsync(id);
             if (invoice.BuyerId != userId)
             {
                 return BadRequest();
@@ -153,16 +135,7 @@
             }
 
             var userId = this.userManager.GetUserId(User);
-            var invoices = this.invoiceService.GetInvoicesByBuyer(userId, page);
-            var orders = Mapper.Map<ListOrdersViewModel[]>(invoices);
-
-            var model = new Paginator<ListOrdersViewModel[]>
-            {
-                PageTitle = "Bought Items", 
-                Model = orders, 
-                CurrentPage = page, 
-                AllPages = 5 // TODO -> Set this in Services
-            };
+            var model = this.invoiceService.GetInvoicesByBuyer(userId, page);
 
             return View("List", model);
         }

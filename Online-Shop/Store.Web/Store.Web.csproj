@@ -34,4 +34,8 @@
     <ProjectReference Include="..\Store.Infrastructure\Store.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\InvoiceViewModels\" />
+  </ItemGroup>
+
 </Project>
