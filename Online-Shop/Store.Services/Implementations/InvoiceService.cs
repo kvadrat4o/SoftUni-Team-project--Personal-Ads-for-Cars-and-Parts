@@ -184,5 +184,14 @@
 
             return invoice;
         }
+
+        public Invoice[] GetInvoicesByBuyer(string buyerId, int page) => this.db.Invoices
+            .Include(i => i.InvoiceProducts)
+                .ThenInclude(ip => ip.Product)
+            .Where(i => i.BuyerId == buyerId)
+            .OrderByDescending(i => i.IssueDate)
+            .Skip((page - 1) * ServiceConstants.PageSize)
+            .Take(ServiceConstants.PageSize)
+            .ToArray();
     }
 }

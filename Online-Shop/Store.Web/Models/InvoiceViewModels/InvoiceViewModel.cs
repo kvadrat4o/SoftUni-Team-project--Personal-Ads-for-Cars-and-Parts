@@ -3,6 +3,7 @@
     using AutoMapper;
     using Store.Data.Models;
     using Store.Infrastructure.Mapping.Interfaces;
+    using System;
     using System.Collections.Generic;
 
     public class InvoiceViewModel : IMapFrom<Invoice>, IHaveCustomMapping
@@ -28,6 +29,8 @@
         public decimal NetValue { get; set; }
 
         public bool IsPayed { get; set; }
+
+        public DateTime IssueDate { get; set; }
 
         public ICollection<InvoiceProductViewModel> Products { get; set; } = new HashSet<InvoiceProductViewModel>();
 

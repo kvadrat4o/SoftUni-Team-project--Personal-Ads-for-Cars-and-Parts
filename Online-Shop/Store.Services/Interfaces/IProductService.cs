@@ -23,6 +23,5 @@
         List<Product> AllProductsForSale();
 
         List<Product> ProductsByCategory(Category category);
-
     }
 }

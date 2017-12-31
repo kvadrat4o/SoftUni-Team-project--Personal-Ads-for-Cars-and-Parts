@@ -9,6 +9,8 @@
     using Store.Services.Interfaces;
     using Store.Web.Models.InvoiceViewModels;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using Store.Web.Models;
 
     [Authorize]
     public class InvoiceController : Controller
@@ -140,6 +142,29 @@
             var invoice = await this.invoiceService.AddProductAsync(product, userId, quantity);
 
             return RedirectToAction(nameof(Details), new { id = invoice.Id });
+        }
+
+        [Authorize]
+        public IActionResult ListOrders(int page = 1)
+        {
+            if (page <= 0)
+            {
+                return BadRequest();
+            }
+
+            var userId = this.userManager.GetUserId(User);
+            var invoices = this.invoiceService.GetInvoicesByBuyer(userId, page);
+            var orders = Mapper.Map<ListOrdersViewModel[]>(invoices);
+
+            var model = new Paginator<ListOrdersViewModel[]>
+            {
+                PageTitle = "Bought Items", 
+                Model = orders, 
+                CurrentPage = page, 
+                AllPages = 5 // TODO -> Set this in Services
+            };
+
+            return View("List", model);
         }
     }
 }

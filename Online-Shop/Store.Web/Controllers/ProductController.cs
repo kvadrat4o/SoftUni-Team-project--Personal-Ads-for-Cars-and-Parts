@@ -8,6 +8,7 @@
     using Store.Data.Models.Enums;
     using Store.Services.Interfaces;
     using Store.Services.Models.ProductViewModels;
+    using Store.Web.Models.InvoiceViewModels;
     using Store.Web.Models.ProductViewModels;
     using System;
     using System.Collections.Generic;

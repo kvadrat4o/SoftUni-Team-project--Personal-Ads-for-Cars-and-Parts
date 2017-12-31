@@ -1,6 +1,7 @@
 ﻿namespace Store.Services.Interfaces
 {
     using Store.Data.Models;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IInvoiceService
@@ -26,5 +27,7 @@
         Task RemoveInvoiceAsync(int invoiceId);
 
         Task<Invoice> AddProductAsync(Product product, string userId, int quantity);
+
+        Invoice[] GetInvoicesByBuyer(string userId, int page);
     }
 }

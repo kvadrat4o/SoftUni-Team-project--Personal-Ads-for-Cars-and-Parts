@@ -12,5 +12,7 @@
         public const string InfoMessageKey = "Info";
         public const string WarningMessageKey = "Warning";
         public const string DangerMessageKey = "Danger";
+
+        public const int InvoiceNumberLeadingZeroes = 10;
     }
 }

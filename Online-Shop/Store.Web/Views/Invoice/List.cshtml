@@ -1,0 +1,87 @@
+﻿@model Paginator<ListOrdersViewModel[]>
+
+@{
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<h2>@Model.PageTitle</h2>
+
+<!--Pagination -->
+<nav class="text-center">
+    <ul class="pagination">
+        <li class="page-item @(Model.CurrentPage > 1 ? string.Empty : "disabled")">
+            <a class="page-link" href="@(Model.CurrentPage > 1 ? $"ListOrders?page={Model.CurrentPage - 1}" : "#")" tabindex="-1">Previous</a>
+        </li>
+
+        @if (Model.CurrentPage > ServiceConstants.PageSize)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#">... <span class="sr-only"></span></a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Math.Max(Model.AllPages, ServiceConstants.PageSize); i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <a class="page-link" href="#">@i <span class="sr-only">(current)</span></a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item"><a asp-action="ListOrders" asp-route-page="@i" class="page-link">@i</a></li>
+            }
+        }
+
+        @if (Model.CurrentPage + ServiceConstants.PageSize < Model.AllPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#">... <span class="sr-only"></span></a>
+            </li>
+        }
+
+        <li class="page-item @(Model.CurrentPage >= Model.AllPages ? "disabled" : string.Empty)">
+            <a class="page-link" href="@(Model.CurrentPage >= Model.AllPages ? "#" : $"ListOrders?page={Model.CurrentPage + 1}")" tabindex="-1">Next</a>
+        </li>
+    </ul>
+</nav>
+<!--/Pagination -->
+
+@foreach (var invoice in Model.Model)
+{
+    <div class="table-bordered" style="padding:5px; margin:10px;">
+        <h2 class="text-center">
+            @{ var invoiceLink = $"Invoice: {invoice.Id.ToString().PadLeft(WebConstants.InvoiceNumberLeadingZeroes, '0')} - {invoice.IssueDate.ToShortDateString()}"; }
+            <a asp-action="Details" asp-route-id="@invoice.Id">@invoiceLink</a>
+        </h2>
+
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Picture</th>
+                    <th>Title</th>
+                    <th>Condition</th>
+                    <th>Seller</th>
+                    <th>Quantity</th>
+                    <th>Single Price</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in invoice.Products)
+                {
+                    <tr>
+                        <td><img src="@item.PicturePath" class="img-responsive img-thumbnail"></td>
+                        <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id" asp-route-title="@item.Title">@item.Title</a></td>
+                        <td>@(item.IsNew ? "New" : "Second hand")</td>
+                        <td><a asp-controller="User" asp-action="Details" asp-route-userId="@item.SellerId" btn-link small>Seller details</a></td>
+                        <td>@item.Quantity</td>
+                        <td>@string.Format("{0:C2}", item.Price)</td>
+                        <td>@string.Format("{0:C2}", item.Price * item.Quantity)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

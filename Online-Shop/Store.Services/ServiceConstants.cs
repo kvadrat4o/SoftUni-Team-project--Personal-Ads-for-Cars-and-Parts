@@ -1,6 +1,6 @@
 ﻿namespace Store.Services
 {
-    internal class ServiceConstants
+    public class ServiceConstants
     {
         internal const decimal ProductListingPriceTax = 0.65M;
 
@@ -9,5 +9,7 @@
 
         internal const long ImageMaxSizeInMB = 1;
         internal const long ImageMaxSizeInBytes = ImageMaxSizeInMB * 1024 * 1024;
+
+        public const int PageSize = 5;
     }
 }

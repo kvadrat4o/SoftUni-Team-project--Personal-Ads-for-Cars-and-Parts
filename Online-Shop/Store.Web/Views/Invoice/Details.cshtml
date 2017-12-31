@@ -22,8 +22,9 @@
                 <div class="text-center">
                     <img src="~/images/FullLogo.png" class="invoice-logo">
                 </div>
-                <p class="text-center"><b>Invoice Nr:</b> @Model.Id.ToString().PadLeft(10, '0')</p>
-                <p class="text-center"><b>Date:</b> @DateTime.Now.ToShortDateString()</p>
+                <p class="text-center"><b>Invoice Nr:</b> @Model.Id.ToString().PadLeft(WebConstants.InvoiceNumberLeadingZeroes, '0')</p>
+                @{  var date = Model.IsPayed ? Model.IssueDate.ToShortDateString() : DateTime.Now.ToShortDateString(); }
+                <p class="text-center"><b>Date:</b> @date</p>
             </td>
             <td>
                 <p class="text-right">
