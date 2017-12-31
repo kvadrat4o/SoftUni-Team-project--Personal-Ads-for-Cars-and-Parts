@@ -1,4 +1,4 @@
-﻿@model DetailsProductViewModel
+﻿@model ProductDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -42,7 +42,7 @@
 <h3 class="text-center">Descrioption:</h3>
 <p>@Model.Description</p>
 <br />
-<a asp-controller="User" asp-action="AllProducts" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
+<a asp-controller="User" asp-action="ProductsForSale" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
 
 
 @section Scripts {

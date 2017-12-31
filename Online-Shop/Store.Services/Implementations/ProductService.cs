@@ -105,8 +105,10 @@
             return productToEdit;
         }
 
-        public IEnumerable<Product> ProductsBySeller(string sellerId) => this.db.Products
-            .Where(p => p.SellerId == sellerId);
+        public ProductDetailsViewModel[] ProductsBySeller(string sellerId) => this.db.Products
+            .Where(p => p.SellerId == sellerId && p.IsActive)
+            .ProjectTo<ProductDetailsViewModel>()
+            .ToArray();
 
         public List<Product> AllProductsForSale() => this.db.Products.ToList();
 
@@ -154,6 +156,9 @@
             }
         }
 
-        public List<Product> ProductsByCategory(Category category) => this.db.Products.Where(p => p.Category.Equals(category)).ToList();
+        public List<TModel> ProductsByCategory<TModel>(Category category) => this.db.Products
+            .Where(p => p.Category.Equals(category))
+            .ProjectTo<TModel>()
+            .ToList();
     }
 }

@@ -22,10 +22,10 @@
 
         Task<Product> Edit(EditProductViewModel newProductData, string requestUserId);
 
-        IEnumerable<Product> ProductsBySeller(string sellerId);
+        ProductDetailsViewModel[] ProductsBySeller(string sellerId);
 
         List<Product> AllProductsForSale();
 
-        List<Product> ProductsByCategory(Category category);
+        List<TModel> ProductsByCategory<TModel>(Category category);
     }
 }

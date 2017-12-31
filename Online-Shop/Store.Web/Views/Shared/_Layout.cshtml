@@ -37,8 +37,7 @@
                        @if (User.Identity.IsAuthenticated)
                         {
                             <li><a asp-area="" asp-controller="Product" asp-action="Create">New Product</a></li>
-                            <li><a asp-area="" asp-controller="User" asp-action="AllProducts">All Products</a></li>
-
+                            <li><a asp-area="" asp-controller="User" asp-action="ProductsForSale">My Products</a></li>
                         }
                     }
                 </ul>

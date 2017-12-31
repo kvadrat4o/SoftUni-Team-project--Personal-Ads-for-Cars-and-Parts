@@ -59,7 +59,6 @@
             }
 
             TempData[WebConstants.SuccessMessageKey] = $"Product {model.Title} is successfully created.";
-
             return RedirectToAction(nameof(Details), new { id = product.Id, title = product.Title });
         }
 
@@ -94,7 +93,7 @@
                 return View(model);
             }
 
-            var mappedProduct = Mapper.Map<DetailsProductViewModel>(finalProduct);
+            var mappedProduct = Mapper.Map<ProductDetailsViewModel>(finalProduct);
 
             return View(nameof(Details), mappedProduct);
         }
@@ -118,7 +117,7 @@
 
         public async Task<IActionResult> Details(int id, string title)
         {
-            var model = await this.productService.GetProductAsync<DetailsProductViewModel>(id);
+            var model = await this.productService.GetProductAsync<ProductDetailsViewModel>(id);
             if (model == null || !model.Title.Equals(title))
             {
                 return NotFound();
@@ -143,16 +142,8 @@
 
         public IActionResult ProductsByCategory(Category category)
         {
-            var productsByCategory = this.productService.ProductsByCategory(category);
-
-            var mapped = new List<CatalogProductViewModel>();
-
-            foreach (var product in productsByCategory)
-            {
-                mapped.Add(Mapper.Map<CatalogProductViewModel>(product));
-            }
-
-            return View(nameof(ProductsForSale), mapped);
+            var products = this.productService.ProductsByCategory<CatalogProductViewModel>(category);
+            return View(nameof(ProductsForSale), products);
         }
 
         public IActionResult SearchProductByTitle(string title)

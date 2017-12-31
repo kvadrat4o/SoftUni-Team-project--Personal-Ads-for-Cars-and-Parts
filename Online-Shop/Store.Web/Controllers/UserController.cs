@@ -7,7 +7,7 @@
     using Store.Data.Models;
     using Store.Services.Interfaces;
     using Store.Services.Models.AddressViewModels;
-    using Store.Web.Models.ProductViewModels;
+    using Store.Services.Models.ProductViewModels;
     using Store.Web.Models.UserViewModels;
     using System.Threading.Tasks;
 
@@ -40,7 +40,7 @@
             return RedirectToAction("Details");
         }
 
-        public async Task<IActionResult> AllProducts(string sellerId = null)
+        public async Task<IActionResult> ProductsForSale(string sellerId = null)
         {
             if (sellerId == null)
             {
@@ -52,10 +52,9 @@
                 sellerId = this.userManager.GetUserId(User);
             }
 
-            var products = this.productService.ProductsBySeller(sellerId);
+            var mappedProducts = this.productService.ProductsBySeller(sellerId);
             var seller = await this.userManager.FindByIdAsync(sellerId);
 
-            var mappedProducts = Mapper.Map<DetailsProductViewModel[]>(products);
             var productsToShow = new UserProductsListViewModel
             {
                 SellerId = seller.Id,
@@ -64,7 +63,7 @@
                 ProductsToSell = mappedProducts
             };
 
-            return View(nameof(AllProducts), productsToShow);
+            return View(nameof(ProductsForSale), productsToShow);
         }
 
         public IActionResult Details(string userId = null)
