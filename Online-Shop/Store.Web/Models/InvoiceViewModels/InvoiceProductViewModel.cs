@@ -3,7 +3,7 @@
     using AutoMapper;
     using Store.Data;
     using Store.Data.Models;
-    using Store.Infrastructure.Mapping.Interfaces;
+    using Store.Helpers.Interfaces.Mapping;
 
     public class InvoiceProductViewModel : IMapFrom<ProductInvoice>, IHaveCustomMapping
     {

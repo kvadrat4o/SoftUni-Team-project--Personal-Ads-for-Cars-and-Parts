@@ -1,7 +1,7 @@
-﻿namespace Store.Infrastructure.Mapping
+﻿namespace Store.Web
 {
     using AutoMapper;
-    using Store.Infrastructure.Mapping.Interfaces;
+    using Store.Helpers.Interfaces.Mapping;
     using System;
     using System.Linq;
 

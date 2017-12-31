@@ -1,9 +1,8 @@
 ﻿namespace Store.Web.Models.ProductViewModels
 {
-    using AutoMapper;
     using Data.Models.Enums;
     using Store.Data.Models;
-    using Store.Infrastructure.Mapping.Interfaces;
+    using Store.Helpers.Interfaces.Mapping;
     using System.ComponentModel.DataAnnotations;
 
     using static Data.ModelConstants;

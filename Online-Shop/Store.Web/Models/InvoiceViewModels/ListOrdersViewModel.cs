@@ -2,7 +2,7 @@
 {
     using AutoMapper;
     using Store.Data.Models;
-    using Store.Infrastructure.Mapping.Interfaces;
+    using Store.Helpers.Interfaces.Mapping;
     using System;
     using System.Collections.Generic;
 

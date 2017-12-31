@@ -2,7 +2,7 @@
 {
     using Store.Data.Models;
     using Store.Data.Models.Enums;
-    using Store.Infrastructure.Mapping.Interfaces;
+    using Store.Helpers.Interfaces.Mapping;
 
     public class CatalogProductViewModel: IMapFrom<Product>
     {
