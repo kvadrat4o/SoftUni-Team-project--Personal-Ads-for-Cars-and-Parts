@@ -30,14 +30,14 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                <ul class="nav navbar-nav ">
+                    <li><a asp-area="" asp-controller="Home" asp-action="About" class="my-hover">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact" class="my-hover ">Contact</a></li>
                     <li><a asp-area="" asp-controller="Product" asp-action="ProductsForSale">Catalog</a></li>
                     <li>
                         <form class="form-inline my-search">
                             <input class="form-control" type="text" placeholder="Search">
-                            <button asp-controller="Product" asp-action="Search" class="btn" type="submit">Search</button>
+                            <button asp-controller="Product" asp-action="Search" class="btn btn-primary" type="submit">Search</button>
                         </form>
                     </li>
                 </ul>

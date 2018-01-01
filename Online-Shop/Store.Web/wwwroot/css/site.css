@@ -3,13 +3,21 @@
     padding-bottom: 20px;
 }
 
+.nav > li > a:focus, .nav > li > a:hover {
+    /* background-color: transparent !important; */
+    background-color: #61acff !important;
+    border-radius: 10%;
+    color: white;
+}
+
 .my-bg-blue {
-    background-color: cornflowerblue;
+    background-color: #428bca;
 }
 
 .my-border-blue {
     border: solid;
-    border-color: cornflowerblue;
+    background-color: #61acff;
+    border-color: #428bca;
 }
 
 .my-search {
@@ -17,6 +25,7 @@
     margin-left: 10px;
     margin-right: 10px;
 }
+
 .my-mlr-5 {
     margin-left: 5px;
     margin-right: 5px;
