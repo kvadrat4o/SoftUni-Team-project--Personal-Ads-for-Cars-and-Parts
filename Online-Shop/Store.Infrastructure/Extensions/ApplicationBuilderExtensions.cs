@@ -50,6 +50,7 @@
                                 UserName = adminUsername,
                                 FirstName = ModelConstants.AdminFirstName,
                                 LastName = ModelConstants.AdminLastName,
+                                MoneyBalance = 100
                             };
 
                             await userManager.CreateAsync(adminUser, adminPassword);
