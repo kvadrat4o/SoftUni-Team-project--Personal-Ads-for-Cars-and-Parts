@@ -4,6 +4,7 @@
     {
         public const string UserDefaultAvatarPath = "../images/DefaultProfilePicture.png";
         public const string FullLogoPath = "../images/FullLogo.png";
+        public const string FaviconPath = "../images/favicon.ico";
 
         public const string OrderCompletedMessageText = "Order Completed. Thank you for your purchase. Your order will be shipped as soon as possible.";
 
