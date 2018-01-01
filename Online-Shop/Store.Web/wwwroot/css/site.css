@@ -58,6 +58,10 @@
     padding: 5px;
 }
 
+.mt-20 {
+    margin-top:20px;
+}
+
 .float-left {
     float: left;
     margin: 10px;
