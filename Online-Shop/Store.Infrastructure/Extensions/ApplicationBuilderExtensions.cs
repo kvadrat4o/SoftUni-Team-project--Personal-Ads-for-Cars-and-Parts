@@ -46,6 +46,7 @@
                             adminUser = new User
                             {
                                 Email = adminEmail,
+                                Avatar = @"http://thecatapi.com/api/images/get?format=src&type=gif",
                                 UserName = adminUsername,
                                 FirstName = ModelConstants.AdminFirstName,
                                 LastName = ModelConstants.AdminLastName,
