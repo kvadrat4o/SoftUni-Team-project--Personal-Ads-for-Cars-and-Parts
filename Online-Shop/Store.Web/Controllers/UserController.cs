@@ -62,7 +62,7 @@
                 IsRequestSenderOwner = seller.Id == sellerId,
                 ProductsToSell = mappedProducts
             };
-
+            ViewBag.loggedUserId = this.userManager.GetUserId(User);
             return View(nameof(ProductsForSale), productsToShow);
         }
 
