@@ -28,7 +28,7 @@
 					<th>@item.Category</th>
 					<th>
 						<a href="~/Product/Details?id=@item.Id&title=@item.Title" class="btn btn-primary">Details</a>
-                        
+						
 						@if (item.SellerId == ViewBag.loggedUserId)
 							{
 						<a href="~/Product/Edit?id=@item.Id&title=@item.Title" class="btn btn-warning">Edit</a>

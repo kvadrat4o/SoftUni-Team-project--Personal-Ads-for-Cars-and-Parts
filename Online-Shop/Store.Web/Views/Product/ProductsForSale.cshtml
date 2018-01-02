@@ -10,12 +10,11 @@
     <div class="container">
         <div class="row">
             <form action="SearchProductByTitle">
-                <div class="col-xs-4">
-                    <input type="text" id="title" name="title" size="35"/>
-                    <button type="submit" class="btn btn-primary" value="Submit">Search</button>
+                <div class="col-xs-2">
+                    <p><b>Search by category:</b></p>
                 </div>
             </form>
-            <div class="col-xs-6 dropdown">
+            <div class="col-xs-5 dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Categories
                 </button>
@@ -43,9 +42,12 @@
             @foreach (var product in Model)
                 {
                 <tr>
+                @{ 
+                    var piece = product.Quantity > 1 ? "pieces" : "piece";
+                }
                     <th>@product.Title</th>
-                    <th>@product.Price</th>
-                    <th>@product.Quantity</th>
+                    <th>@string.Format("{0:C}", @product.Price)</th>
+                    <th>@product.Quantity @piece in stock</th>
                     <th>
                         <a href="~/Product/Details?id=@product.Id&title=@product.Title" class="btn btn-primary">Details</a>
                     </th>
