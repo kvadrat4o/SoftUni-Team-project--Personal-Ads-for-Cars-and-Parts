@@ -60,7 +60,7 @@
         {
             <tr>
                 <td>@number</td>
-                <td><img src="@product.PicturePath" class="img-responsive img-thumbnail"></td>
+                <td width="10%"><img src="@product.PicturePath" class="img-responsive img-thumbnail"></td>
                 <td><a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" asp-route-title="@product.Title">@product.Title</a></td>
                 <td>@(product.IsNew ? "New" : "Second Hand")</td>
                 <td>

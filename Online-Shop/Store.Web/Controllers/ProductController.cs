@@ -169,7 +169,7 @@
                 return RedirectToAction(nameof(Details), new { id = productId });
             }
 
-            var product = await this.productService.GetProductAsync<Product>(productId);
+            var product = await this.productService.GetProductAsync(productId);
             if (product == null)
             {
                 return BadRequest();

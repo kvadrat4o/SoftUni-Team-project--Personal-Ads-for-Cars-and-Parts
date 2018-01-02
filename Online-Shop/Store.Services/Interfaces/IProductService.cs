@@ -16,6 +16,8 @@
 
         Task<TModel> GetProductAsync<TModel>(int id);
 
+        Task<Product> GetProductAsync(int id);
+
         Task<Product> GetProductAsync(int id, string sellerId);
 
         Task<Product> GetProductAsync(string title);

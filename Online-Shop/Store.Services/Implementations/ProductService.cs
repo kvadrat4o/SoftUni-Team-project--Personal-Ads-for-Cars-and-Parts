@@ -62,6 +62,10 @@
             .ProjectTo<TModel>()
             .FirstOrDefaultAsync();
 
+        public async Task<Product> GetProductAsync(int id) => await db.Products
+            .Where(p => p.Id == id)
+            .FirstOrDefaultAsync();
+
         public async Task<Product> GetProductAsync(int id, string sellerId) => await db.Products
             .Where(p => p.Id == id && p.SellerId == sellerId)
             .FirstOrDefaultAsync();
