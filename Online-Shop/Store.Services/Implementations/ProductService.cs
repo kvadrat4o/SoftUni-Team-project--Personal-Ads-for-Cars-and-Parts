@@ -31,7 +31,7 @@
                 .FirstOrDefaultAsync(p => p.Title.Equals(product.Title, StringComparison.OrdinalIgnoreCase));
             if (existingProduct != null)
             {
-                return $"There is already a product with that title: {product.Title}";
+                return $"There is already a product with this title: {product.Title}";
             }
 
             var isTaxPayed = await this.TryPayListingTaxAsync(product.SellerId);
