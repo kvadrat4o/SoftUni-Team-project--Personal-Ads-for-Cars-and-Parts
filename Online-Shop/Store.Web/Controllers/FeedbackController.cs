@@ -6,6 +6,7 @@ using Store.Services.Interfaces;
 using Store.Services.Implementations;
 using AutoMapper;
 using System.Threading.Tasks;
+using System;
 
 namespace Store.Web.Controllers
 {
@@ -57,6 +58,14 @@ namespace Store.Web.Controllers
             var feedback = await this.feedbackService.GetFeedbackAsync<DetailsFeedbackViewModel>(productId, senderId);
 
             return View(feedback);
+        }
+
+        public IActionResult FeedbacksList()
+        {
+            var loggedUserId = this.userManager.GetUserId(User);
+            var userFeedbacks = this.feedbackService.GetUserFeedbacks(loggedUserId);
+
+            return View(userFeedbacks);
         }
     }
 }

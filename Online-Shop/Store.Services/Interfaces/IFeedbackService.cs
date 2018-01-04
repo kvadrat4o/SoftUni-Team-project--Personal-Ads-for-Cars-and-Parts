@@ -1,11 +1,9 @@
-﻿using Store.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Store.Services.Interfaces
+﻿namespace Store.Services.Interfaces
 {
+    using Store.Data.Models;
+    using Store.Services.Models.FeedbackViewModels;
+    using System.Threading.Tasks;
+
     public interface IFeedbackService
     {
         Task<string> CreateAsync(Feedback feedback);
@@ -13,5 +11,7 @@ namespace Store.Services.Interfaces
         void Delete(Feedback feedback);
 
         Task<TModel> GetFeedbackAsync<TModel>(int productId, string senderId);
+
+        ListFeedbackProductViewModel[] GetUserFeedbacks(string senderId);
     }
 }
