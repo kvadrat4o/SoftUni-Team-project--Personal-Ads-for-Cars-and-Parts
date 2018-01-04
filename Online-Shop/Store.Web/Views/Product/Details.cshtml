@@ -43,8 +43,8 @@
 <p>@Model.Description</p>
 <br />
 <a asp-controller="User" asp-action="ProductsForSale" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
-
-
+<br />
+    <a asp-action="Create" asp-controller="Feedback" asp-route-receiverId="@Model.SellerId" asp-route-productId="@Model.Id" class="btn btn-warning">Give Feedback</a>
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

@@ -1,62 +1,62 @@
 ﻿@model List<CatalogProductViewModel>
 
-@{
-    ViewData["Title"] = "All products for sale.";
-}
-<link rel="stylesheet" href="~/css/site.css" />
-<div class="container">
-<br />
-<br />
+    @{
+        ViewData["Title"] = "All products for sale.";
+    }
+    <link rel="stylesheet" href="~/css/site.css" />
     <div class="container">
-        <div class="row">
-            <form action="SearchProductByTitle">
-                <div class="col-xs-2">
-                    <p><b>Search by category:</b></p>
+        <br />
+        <br />
+        <div class="container">
+            <div class="row">
+                <form action="SearchProductByTitle">
+                    <div class="col-xs-2">
+                        <p><b>Search by category:</b></p>
+                    </div>
+                </form>
+                <div class="col-xs-5 dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Categories
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Accessories">Accessories</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Exterior">Exterior</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Interior">Interior</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Lighting">Lighting</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Tunning">Tunning</a>
+                    </ul>
                 </div>
-            </form>
-            <div class="col-xs-5 dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Accessories">Accessories</a>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Exterior">Exterior</a>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Interior">Interior</a>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Lighting">Lighting</a>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="~/Product/ProductsByCategory?category=Tunning">Tunning</a>
-                </ul>
             </div>
         </div>
-    </div>
         <br />
         <br />
-    @if (Model.Count() != 0)
-    {
-        <table class="table table-bordered table-hover">
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th></th>
-            </tr>
-            @foreach (var product in Model)
-                {
+        @if (Model.Count() != 0)
+        {
+            <table class="table table-bordered table-hover">
                 <tr>
-                @{ 
-                    var piece = product.Quantity > 1 ? "pieces" : "piece";
-                }
-                    <th>@product.Title</th>
-                    <th>@string.Format("{0:C}", @product.Price)</th>
-                    <th>@product.Quantity @piece in stock</th>
-                    <th>
-                        <a href="~/Product/Details?id=@product.Id&title=@product.Title" class="btn btn-primary">Details</a>
-                    </th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th></th>
                 </tr>
-            }
-        </table>
-    }
-    else
-    {
-        <h2>No products for sale.</h2>
-    }
-</div>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        @{
+                            var piece = product.Quantity > 1 ? "pieces" : "piece";
+                        }
+                        <th>@product.Title</th>
+                        <th>@string.Format("{0:C}", @product.Price)</th>
+                        <th>@product.Quantity @piece in stock</th>
+                        <th>
+                            <a href="~/Product/Details?id=@product.Id&title=@product.Title" class="btn btn-primary">Details</a>
+                        </th>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <h2>No products for sale.</h2>
+        }
+    </div>
