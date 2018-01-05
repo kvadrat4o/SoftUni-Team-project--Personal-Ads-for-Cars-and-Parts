@@ -141,5 +141,13 @@ namespace Store.Web.Controllers
 
             return View(productFeedbacks);
         }
+
+        public IActionResult ReceivedFeedbacks()
+        {
+            var loggedUserId = this.userManager.GetUserId(User);
+            var userFeedbacks = this.feedbackService.GetUserReceivedFeedbacks(loggedUserId);
+
+            return View(userFeedbacks);
+        }
     }
 }

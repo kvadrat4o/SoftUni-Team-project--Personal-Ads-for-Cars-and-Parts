@@ -19,5 +19,7 @@
         ListFeedbackProductViewModel[] GetProductFeedbacks(int productId);
 
         ListFeedbackProductViewModel[] GetUserFeedbacks(string senderId);
+
+        ListFeedbackProductViewModel[] GetUserReceivedFeedbacks(string senderId);
     }
 }

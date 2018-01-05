@@ -69,6 +69,11 @@ namespace Store.Services.Implementations
             .ProjectTo<ListFeedbackProductViewModel>()
             .ToArray();
 
+        public ListFeedbackProductViewModel[] GetUserReceivedFeedbacks(string receiverId) => this.db.Feedbacks.
+            Where(f => f.ReceiverId == receiverId)
+            .ProjectTo<ListFeedbackProductViewModel>()
+            .ToArray();
+
         public ListFeedbackProductViewModel[] GetProductFeedbacks(int productId) => this.db.Feedbacks
             .Where(f => f.ProductId == productId)
             .ProjectTo<ListFeedbackProductViewModel>()
