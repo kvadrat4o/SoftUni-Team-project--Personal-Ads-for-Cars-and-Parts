@@ -1,4 +1,4 @@
-﻿namespace Store.Web.Models.FeedbackViewModels
+﻿namespace Store.Services.Models.FeedbackViewModels
 {
     using Store.Data.Models;
     using Store.Helpers.Interfaces.Mapping;

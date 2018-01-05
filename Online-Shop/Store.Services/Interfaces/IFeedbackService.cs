@@ -8,9 +8,15 @@
     {
         Task<string> CreateAsync(Feedback feedback);
 
+        Task<Feedback> EditFeedback(DetailsFeedbackViewModel feedback, string loggedUserId);
+
         void Delete(Feedback feedback);
 
         Task<TModel> GetFeedbackAsync<TModel>(int productId, string senderId);
+
+        Task<Feedback> GetFeedbackAsync(int productId, string senderId);
+
+        ListFeedbackProductViewModel[] GetProductFeedbacks(int productId);
 
         ListFeedbackProductViewModel[] GetUserFeedbacks(string senderId);
     }

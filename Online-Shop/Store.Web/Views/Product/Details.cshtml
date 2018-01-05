@@ -34,6 +34,8 @@
             </div>
             <button type="submit" asp-action="Buy" asp-controller="Product" class="btn btn-primary">Buy Now</button>
             <button type="submit" asp-action="AddProduct" asp-controller="Invoice" class="btn btn-info">Add To Basket</button>
+            <a asp-action="Create" asp-controller="Feedback" asp-route-receiverId="@Model.SellerId" asp-route-productId="@Model.Id" class="btn btn-warning">Give Feedback</a>
+            <a asp-action="FeedbacksList" asp-controller="Feedback" asp-route-productId="@Model.Id" class="btn btn-warning">List Feedbacks for this product</a>
         </form>
     </div>
 </div>
@@ -44,7 +46,6 @@
 <br />
 <a asp-controller="User" asp-action="ProductsForSale" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
 <br />
-    <a asp-action="Create" asp-controller="Feedback" asp-route-receiverId="@Model.SellerId" asp-route-productId="@Model.Id" class="btn btn-warning">Give Feedback</a>
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

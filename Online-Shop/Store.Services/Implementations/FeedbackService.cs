@@ -4,6 +4,7 @@ using Store.Data;
 using Store.Data.Models;
 using Store.Services.Interfaces;
 using Store.Services.Models.FeedbackViewModels;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,17 +33,46 @@ namespace Store.Services.Implementations
             return null;
         }
 
-        public async void Delete(Feedback feedback)
+        public async Task<Feedback> EditFeedback(DetailsFeedbackViewModel feedback, string loggedUserId)
         {
-            this.db.Remove(feedback);
+            var feedbackToEdit = await this.db.Feedbacks.Where(f => f.SenderId == feedback.SenderId && f.ProductId == feedback.ProductId).FirstOrDefaultAsync();
+            if (feedbackToEdit == null || !feedback.SenderId.Equals(loggedUserId))
+            {
+                throw new InvalidOperationException( "You are not allowed to edit someone else's feedbacks");
+            }
+
+            feedbackToEdit.Content = feedback.Content;
+            feedbackToEdit.Rating = feedback.Rating;
+
             await this.db.SaveChangesAsync();
+
+            return feedbackToEdit;
         }
 
-        public ListFeedbackProductViewModel[] GetUserFeedbacks(string senderId) => this.db.Feedbacks.ProjectTo<ListFeedbackProductViewModel>().ToArray();
+        public void Delete(Feedback feedback)
+        {
+            this.db.Feedbacks.Remove(feedback);
+            this.db.SaveChanges();
+        }
 
         public async Task<TModel> GetFeedbackAsync<TModel>(int productId, string senderId) => await this.db.Feedbacks
             .Where(f => f.ProductId == productId && f.SenderId == senderId)
             .ProjectTo<TModel>()
             .FirstOrDefaultAsync();
+
+        public async Task<Feedback> GetFeedbackAsync(int productId, string senderId) => await this.db.Feedbacks
+            .Where(f => f.ProductId == productId && f.SenderId == senderId)
+            .FirstOrDefaultAsync();
+
+        public ListFeedbackProductViewModel[] GetUserFeedbacks(string senderId) => this.db.Feedbacks.
+            Where(f => f.SenderId == senderId)
+            .ProjectTo<ListFeedbackProductViewModel>()
+            .ToArray();
+
+        public ListFeedbackProductViewModel[] GetProductFeedbacks(int productId) => this.db.Feedbacks
+            .Where(f => f.ProductId == productId)
+            .ProjectTo<ListFeedbackProductViewModel>()
+            .ToArray();
+
     }
 }

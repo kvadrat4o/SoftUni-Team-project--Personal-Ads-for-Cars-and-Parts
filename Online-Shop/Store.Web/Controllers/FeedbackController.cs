@@ -7,6 +7,8 @@ using Store.Services.Implementations;
 using AutoMapper;
 using System.Threading.Tasks;
 using System;
+using Store.Services.Models.FeedbackViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Store.Web.Controllers
 {
@@ -45,7 +47,7 @@ namespace Store.Web.Controllers
             var creationMessage = await this.feedbackService.CreateAsync(feedback);
             if (creationMessage != null)
             {
-            TempData[WebConstants.WarningMessageKey] = creationMessage;
+                TempData[WebConstants.WarningMessageKey] = creationMessage;
                 return View(model);
             }
 
@@ -57,15 +59,87 @@ namespace Store.Web.Controllers
         {
             var feedback = await this.feedbackService.GetFeedbackAsync<DetailsFeedbackViewModel>(productId, senderId);
 
+            if (feedback == null)
+            {
+                return NotFound();
+            }
+
             return View(feedback);
         }
 
-        public IActionResult FeedbacksList()
+        [HttpGet]
+        public async Task<IActionResult> Edit(int productId, string senderId)
+        {
+            var feedback = await this.feedbackService.GetFeedbackAsync<DetailsFeedbackViewModel>(productId, senderId);
+
+            if (feedback == null)
+            {
+                return NotFound();
+            }
+
+            if (feedback.SenderId != senderId)
+            {
+                TempData[WebConstants.WarningMessageKey] = "You cannot edit someone else's feedback";
+                return RedirectToAction("FeedbacksList");
+            }
+
+            return View(feedback);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(DetailsFeedbackViewModel model)
         {
             var loggedUserId = this.userManager.GetUserId(User);
-            var userFeedbacks = this.feedbackService.GetUserFeedbacks(loggedUserId);
 
-            return View(userFeedbacks);
+            if (model.SenderId != loggedUserId)
+            {
+                TempData[WebConstants.WarningMessageKey] = "You cannot delete someone else's feedback";
+                return RedirectToAction("FeedbacksList");
+            }
+
+            var editedFeedback = await this.feedbackService.EditFeedback(model, loggedUserId);
+            var mapped = Mapper.Map<Feedback>(editedFeedback);
+
+            return RedirectToAction("Details", new { model.ProductId, model.SenderId });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete(int productId, string senderId)
+        {
+            var feedbackToDelete = await this.feedbackService.GetFeedbackAsync(productId, senderId);
+            var loggedUserId = this.userManager.GetUserId(User);
+
+            if (feedbackToDelete == null)
+            {
+                TempData[WebConstants.WarningMessageKey] = "There is no such feedback to be deleted";
+                return RedirectToAction("FeedbacksList");
+            }
+
+            if (feedbackToDelete.SenderId != loggedUserId)
+            {
+                TempData[WebConstants.WarningMessageKey] = "You cannot delete someone else's feedback";
+                return RedirectToAction("FeedbacksList");
+            }
+
+            this.feedbackService.Delete(feedbackToDelete);
+
+            TempData[WebConstants.SuccessMessageKey] = "Feedback was successfully deleted";
+            return RedirectToAction("FeedbacksList");
+        }
+
+        public IActionResult FeedbacksList(int productId)
+        {
+            if (productId == 0)
+            {
+                var loggedUserId = this.userManager.GetUserId(User);
+                var userFeedbacks = this.feedbackService.GetUserFeedbacks(loggedUserId);
+
+                return View(userFeedbacks);
+            }
+
+            var productFeedbacks = this.feedbackService.GetProductFeedbacks(productId);
+
+            return View(productFeedbacks);
         }
     }
 }
