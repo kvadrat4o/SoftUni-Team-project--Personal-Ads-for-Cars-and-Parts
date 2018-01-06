@@ -12,5 +12,7 @@
         internal const long ImageMaxSizeInBytes = ImageMaxSizeInMB * 1024 * 1024;
 
         public const int PageSize = 5; // Must be Odd number (to arrange current page in the center)
+
+        public const string PaginationDefaultActionName = "List";
     }
 }

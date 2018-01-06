@@ -209,5 +209,19 @@
 
             return RedirectToAction("Pay", "Invoice", new { id = invoice.Id });
         }
+
+        public IActionResult ListOrders(int page = 1)
+        {
+            if (page <= 0)
+            {
+                return BadRequest();
+            }
+
+            var userId = this.userManager.GetUserId(User);
+            var paginator = this.productService.GetOrderedProducts(userId, page);
+            paginator.ActionName = nameof(ListOrders);
+
+            return View(paginator);
+        }
     }
 }

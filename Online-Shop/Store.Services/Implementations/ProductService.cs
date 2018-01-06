@@ -164,5 +164,31 @@
             .Where(p => p.Category.Equals(category))
             .ProjectTo<TModel>()
             .ToList();
+
+        public Paginator<ListOrderedProductViewModel[]> GetOrderedProducts(string buyerId, int page)
+        {
+            var products = this.db.ProductsInvoices
+                .Where(pi => pi.Invoice.BuyerId == buyerId && pi.Invoice.IsPayed)
+                .OrderByDescending(pi => pi.Invoice.IssueDate)
+                .ProjectTo<ListOrderedProductViewModel>()
+                .Skip((page - 1) * ServiceConstants.PageSize)
+                .Take(ServiceConstants.PageSize)
+                .ToArray();
+
+
+            var paginator = new Paginator<ListOrderedProductViewModel[]>
+            {
+                PageTitle = "Ordered Products",
+                Model = products,
+                CurrentPage = page,
+                PagesCount = products.Length,
+                AllPages = (int)Math.Ceiling(this.db.Invoices
+                    .Where(i => i.BuyerId == buyerId && i.IsPayed)
+                    .SelectMany(i => i.InvoiceProducts)
+                    .Count() * 1.0 / ServiceConstants.PageSize)
+            };
+
+            return paginator;
+        }
     }
 }

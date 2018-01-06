@@ -135,9 +135,9 @@
             }
 
             var userId = this.userManager.GetUserId(User);
-            var model = this.invoiceService.GetInvoicesByBuyer(userId, page);
+            var paginator = this.invoiceService.GetInvoicesByBuyer(userId, page);
 
-            return View(model);
+            return View(paginator);
         }
     }
 }

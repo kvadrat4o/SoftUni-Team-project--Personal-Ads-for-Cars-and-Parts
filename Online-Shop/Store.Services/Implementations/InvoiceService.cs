@@ -182,17 +182,17 @@
             return invoice;
         }
 
-        public Paginator<ListOrdersViewModel[]> GetInvoicesByBuyer(string buyerId, int page)
+        public Paginator<ListOrderInvoicesViewModel[]> GetInvoicesByBuyer(string buyerId, int page)
         {
             var orders = this.db.Invoices
-            .Where(i => i.BuyerId == buyerId)
-            .ProjectTo<ListOrdersViewModel>()
-            .OrderByDescending(i => i.IssueDate)
-            .Skip((page - 1) * ServiceConstants.PageSize)
-            .Take(ServiceConstants.PageSize)
-            .ToArray();
+                .Where(i => i.BuyerId == buyerId)
+                .ProjectTo<ListOrderInvoicesViewModel>()
+                .OrderByDescending(i => i.IssueDate)
+                .Skip((page - 1) * ServiceConstants.PageSize)
+                .Take(ServiceConstants.PageSize)
+                .ToArray();
 
-            var paginator = new Paginator<ListOrdersViewModel[]>
+            var paginator = new Paginator<ListOrderInvoicesViewModel[]>
             {
                 PageTitle = "Your Invoices",
                 Model = orders,

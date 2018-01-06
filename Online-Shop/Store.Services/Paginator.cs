@@ -11,5 +11,7 @@
         public int PagesCount { get; set; }
 
         public int AllPages { get; set; }
+
+        public string ActionName { get; set; } = ServiceConstants.PaginationDefaultActionName;
     }
 }

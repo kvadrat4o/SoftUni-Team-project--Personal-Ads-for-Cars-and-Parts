@@ -6,7 +6,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class ListOrdersViewModel : IMapFrom<Invoice>, IHaveCustomMapping
+    public class ListOrderInvoicesViewModel : IMapFrom<Invoice>, IHaveCustomMapping
     {
         public int Id { get; set; }
 
@@ -16,7 +16,7 @@
 
         public void ConfigureMapping(Profile mapper)
         {
-            mapper.CreateMap<Invoice, ListOrdersViewModel>()
+            mapper.CreateMap<Invoice, ListOrderInvoicesViewModel>()
                 .ForMember(i => i.Products, options => options.MapFrom(i => i.InvoiceProducts));
         }
     }

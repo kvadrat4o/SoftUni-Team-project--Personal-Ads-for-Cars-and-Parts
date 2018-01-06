@@ -28,6 +28,6 @@
 
         Task<Invoice> AddProductAsync(Product product, string userId, int quantity);
 
-        Paginator<ListOrdersViewModel[]> GetInvoicesByBuyer(string userId, int page);
+        Paginator<ListOrderInvoicesViewModel[]> GetInvoicesByBuyer(string userId, int page);
     }
 }

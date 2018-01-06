@@ -29,5 +29,7 @@
         List<Product> AllProductsForSale();
 
         List<TModel> ProductsByCategory<TModel>(Category category);
+
+        Paginator<ListOrderedProductViewModel[]> GetOrderedProducts(string buyerId, int page);
     }
 }

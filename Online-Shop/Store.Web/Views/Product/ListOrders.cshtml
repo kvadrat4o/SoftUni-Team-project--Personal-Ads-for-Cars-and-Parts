@@ -1,0 +1,43 @@
+﻿@model Paginator<ListOrderedProductViewModel[]>
+
+@{
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<h2>Model.PageTitle</h2>
+
+@await Html.PartialAsync("_Pagination")
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Title</th>
+            <th>Condition</th>
+            <th>Options</th>
+            <th>Date</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Model)
+        {
+            <tr>
+                <td width="10%"><img src="@item.PicturePath" class="img-responsive img-thumbnail"></td>
+                <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" asp-route-title="@item.Title">@item.Title</a></td>
+                <td>@(item.IsNew ? "New" : "Second hand")</td>
+                <td>
+                    <a asp-controller="User" asp-action="Details" asp-route-userId="@item.SellerId" btn-link small>Seller details</a>
+                    <br />
+                    <a asp-controller="Invoice" asp-action="Details" asp-route-id="@item.InvoiceId" btn-link small>Invoice details</a>
+                </td>
+                <td>@item.OrderDate.ToShortDateString()</td>
+                <td>@item.Quantity</td>
+                <td>@string.Format("{0:C2}", item.Price * item.Quantity)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@await Html.PartialAsync("_Pagination")
