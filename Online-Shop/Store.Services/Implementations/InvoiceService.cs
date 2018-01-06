@@ -197,6 +197,7 @@
                 PageTitle = "Bought Items",
                 Model = orders,
                 CurrentPage = page,
+                PagesCount = orders.Length, 
                 AllPages = (int)Math.Ceiling(this.db.Invoices
                     .Where(i => i.BuyerId == buyerId)
                     .Count() * 1.0 / ServiceConstants.PageSize)
