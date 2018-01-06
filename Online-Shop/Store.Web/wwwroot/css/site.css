@@ -7,6 +7,10 @@
     border-color: #61acff;
 }
 
+td {
+    vertical-align: middle !important;
+}
+
 .nav > li > a:focus,
 .nav > li > a:hover,
 .nav > li > button:focus,

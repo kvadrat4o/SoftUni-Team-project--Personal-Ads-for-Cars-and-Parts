@@ -33,7 +33,9 @@
             if (lastPage > Model.AllPages)
             {
                 lastPage = Model.AllPages;
-                firstPageNumber -= middle;
+                firstPageNumber = firstPageNumber - middle < 1
+                    ? 1
+                    : firstPageNumber - middle;
             }
         }
 
