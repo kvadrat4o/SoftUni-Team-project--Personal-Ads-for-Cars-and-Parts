@@ -194,7 +194,7 @@
 
             var paginator = new Paginator<ListOrdersViewModel[]>
             {
-                PageTitle = "Bought Items",
+                PageTitle = "Your Invoices",
                 Model = orders,
                 CurrentPage = page,
                 PagesCount = orders.Length, 

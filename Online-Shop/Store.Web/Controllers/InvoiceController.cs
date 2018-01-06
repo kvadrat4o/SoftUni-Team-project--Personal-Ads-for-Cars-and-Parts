@@ -127,7 +127,7 @@
         }
 
         [Authorize]
-        public IActionResult ListOrders(int page = 1)
+        public IActionResult List(int page = 1)
         {
             if (page <= 0)
             {
@@ -137,7 +137,7 @@
             var userId = this.userManager.GetUserId(User);
             var model = this.invoiceService.GetInvoicesByBuyer(userId, page);
 
-            return View("List", model);
+            return View(model);
         }
     }
 }

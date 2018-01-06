@@ -1,0 +1,60 @@
+﻿<!--Pagination -->
+<nav class="text-center">
+    <ul class="pagination">
+        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : string.Empty)">
+            <a class="page-link" href="@(Model.CurrentPage > 1 ? $"List?page={Model.CurrentPage - 1}" : "#")" tabindex="-1">Previous</a>
+        </li>
+
+        @{
+            var middle = (int)Math.Ceiling(ServiceConstants.PageSize * 1.0 / 2) - 1; // For Odd Numbers
+            var firstPageNumber = Model.CurrentPage < ServiceConstants.PageSize
+                        ? 1
+                        : Model.CurrentPage - middle;
+
+            if (firstPageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="#">... <span class="sr-only"></span></a>
+                </li>
+            }
+
+            var lastPage = Model.CurrentPage < ServiceConstants.PageSize
+                ? ServiceConstants.PageSize
+                : Model.CurrentPage + middle;
+
+            if (lastPage > Model.AllPages)
+            {
+                lastPage = Model.AllPages;
+                firstPageNumber = firstPageNumber - middle < 1
+                    ? 1
+                    : firstPageNumber - middle;
+            }
+        }
+
+        @for (int i = firstPageNumber; i <= lastPage; i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <a class="page-link" href="#">@i <span class="sr-only">(current)</span></a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item"><a asp-action="List" asp-route-page="@i" class="page-link">@i</a></li>
+            }
+        }
+
+        @if (lastPage != Model.AllPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#">... <span class="sr-only"></span></a>
+            </li>
+        }
+
+        <li class="page-item @(Model.CurrentPage >= Model.AllPages ? "disabled" : string.Empty)">
+            <a class="page-link" href="@(Model.CurrentPage >= Model.AllPages ? "#" : $"List?page={Model.CurrentPage + 1}")" tabindex="-1">Next</a>
+        </li>
+    </ul>
+</nav>
+<!--/Pagination -->
