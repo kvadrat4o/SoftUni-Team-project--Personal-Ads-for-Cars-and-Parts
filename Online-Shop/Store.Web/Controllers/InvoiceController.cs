@@ -9,6 +9,7 @@
     using Store.Services.Models.InvoiceViewModels;
     using Store.Web.Models;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Authorize]
@@ -29,12 +30,20 @@
 
         public async Task<IActionResult> Details(int id)
         {
+            if (id == 0)
+            {
+                return View(null);
+            }
+
             var model = await this.invoiceService.GetInvoiceAsync(id);
             if (model == null)
             {
                 TempData[WebConstants.DangerMessageKey] = "This invoice does not exists!";
                 return RedirectToAction("Index", "Home");
             }
+
+            model.TotalValue = model.Products.Sum(p => p.Price);
+            model.NetValue = model.Products.Sum(p => p.NetPrice);
 
             return View(model);
         }
@@ -126,7 +135,6 @@
             return RedirectToAction(nameof(Details), new { id = invoice.Id });
         }
 
-        [Authorize]
         public IActionResult List(int page = 1)
         {
             if (page <= 0)
@@ -138,6 +146,14 @@
             var paginator = this.invoiceService.GetInvoicesByBuyer(userId, page);
 
             return View(paginator);
+        }
+
+        public async Task<IActionResult> ShoppingCart()
+        {
+            var userId = this.userManager.GetUserId(User);
+            var invoiceId = await this.invoiceService.GetUnpaidInvoiceId(userId) ?? 0;
+
+            return RedirectToAction(nameof(Details), new { id = invoiceId });
         }
     }
 }

@@ -205,5 +205,9 @@
 
             return paginator;
         }
+
+        public async Task<int?> GetUnpaidInvoiceId(string userId) => (await this.db.Invoices
+            .FirstOrDefaultAsync(i => i.BuyerId == userId && !i.IsPayed))
+            ?.Id;
     }
 }
