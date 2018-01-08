@@ -28,7 +28,7 @@
 
         Task<Invoice> AddProductAsync(Product product, string userId, int quantity);
 
-        Paginator<ListOrderInvoicesViewModel[]> GetInvoicesByBuyer(string userId, int page);
+        Task<Paginator<ListOrderInvoicesViewModel[]>> GetInvoicesByBuyer(string userId, int page);
 
         Task<int?> GetUnpaidInvoiceId(string userId);
     }

@@ -31,7 +31,7 @@
                 .ForMember(m => m.SellerId, options => options.MapFrom(pi => pi.Product.SellerId))
                 .ForMember(m => m.Title, options => options.MapFrom(pi => pi.Product.Title))
                 .ForMember(m => m.Price, options => options.MapFrom(pi => pi.Product.Price))
-                .ForMember(m => m.PicturePath, options => options.MapFrom(pi => pi.Product.PicturePath))
+                .ForMember(m => m.PicturePath, options => options.MapFrom(pi => pi.Product.PicturePath ?? ServiceConstants.DefaultProductImage))
                 .ForMember(m => m.IsNew, options => options.MapFrom(pi => pi.Product.IsNew))
                 .ForMember(m => m.OrderDate, options => options.MapFrom(pi => pi.Invoice.IssueDate));
         }

@@ -134,7 +134,7 @@
             return RedirectToAction(nameof(Details), new { id = invoice.Id });
         }
 
-        public IActionResult List(int page = 1)
+        public async Task<IActionResult> List(int page = 1)
         {
             if (page <= 0)
             {
@@ -142,7 +142,8 @@
             }
 
             var userId = this.userManager.GetUserId(User);
-            var paginator = this.invoiceService.GetInvoicesByBuyer(userId, page);
+            var paginator = await this.invoiceService.GetInvoicesByBuyer(userId, page);
+            paginator.PageTitle = "Your Invoices";
 
             return View(paginator);
         }
