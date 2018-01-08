@@ -7,6 +7,8 @@
 
     public class SoldProductViewModel : IMapFrom<ShippingRecord>, IHaveCustomMapping
     {
+        public int Id { get; set; }
+
         public DateTime? DispatchDate { get; set; }
 
         public int ProductId { get; set; }

@@ -40,7 +40,7 @@
                 <td>
                     @if (item.DispatchDate == null)
                     {
-                        <a asp-controller="Product" asp-action="Dispatch" asp-route-id="@item.ProductId" class="btn btn-primary">Dispatch</a>
+                        <a asp-controller="Product" asp-action="Dispatch" asp-route-id="@item.Id" class="btn btn-primary">Dispatch</a>
                     }
                     else
                     {

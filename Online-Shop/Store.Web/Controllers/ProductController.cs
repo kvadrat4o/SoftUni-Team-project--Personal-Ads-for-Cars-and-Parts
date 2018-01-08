@@ -238,5 +238,19 @@
 
             return View(paginator);
         }
+
+        public async Task<IActionResult> Dispatch(int id)
+        {
+            var userId = this.userManager.GetUserId(User);
+
+            var errorMessage = await this.productService.Dispatch(id, userId);
+            if (errorMessage != null)
+            {
+                TempData[WebConstants.DangerMessageKey] = errorMessage;
+                return RedirectToAction(nameof(SoldItems));
+            }
+
+            return RedirectToAction(nameof(SoldItems));
+        }
     }
 }

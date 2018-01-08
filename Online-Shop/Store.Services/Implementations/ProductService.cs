@@ -216,5 +216,23 @@
 
             return paginator;
         }
+
+        public async Task<string> Dispatch(int shippingRecordId, string userId)
+        {
+            var shippingRecord = await this.db.ShippingRecords.FindAsync(shippingRecordId);
+            if (shippingRecord == null)
+            {
+                return "Order not found!";
+            }
+            else if (shippingRecord.DispatchDate != null)
+            {
+                return "This order is already Dispatched";
+            }
+
+            shippingRecord.DispatchDate = DateTime.Now;
+            await this.db.SaveChangesAsync();
+
+            return null;
+        }
     }
 }
