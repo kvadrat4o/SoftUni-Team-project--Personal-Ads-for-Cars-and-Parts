@@ -70,6 +70,8 @@
         {
             var invoice = await this.db.Invoices
                 .Include(i => i.Buyer)
+                .Include(i => i.InvoiceProducts)
+                    .ThenInclude(ip => ip.Product)
                 .FirstOrDefaultAsync(i => i.Id == invoiceId);
 
             if (invoice.IsPayed)
