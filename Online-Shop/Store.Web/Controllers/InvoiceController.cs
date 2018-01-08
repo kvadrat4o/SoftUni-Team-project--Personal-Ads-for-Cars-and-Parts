@@ -1,13 +1,10 @@
 ﻿namespace Store.Web.Controllers
 {
-    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Store.Data.Models;
     using Store.Services.Interfaces;
-    using Store.Services.Models.InvoiceViewModels;
-    using Store.Web.Models;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -41,9 +38,6 @@
                 TempData[WebConstants.DangerMessageKey] = "This invoice does not exists!";
                 return RedirectToAction("Index", "Home");
             }
-
-            model.TotalValue = model.Products.Sum(p => p.Price);
-            model.NetValue = model.Products.Sum(p => p.NetPrice);
 
             return View(model);
         }

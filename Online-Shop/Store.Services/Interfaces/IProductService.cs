@@ -30,6 +30,8 @@
 
         List<TModel> ProductsByCategory<TModel>(Category category);
 
-        Paginator<ListOrderedProductViewModel[]> GetOrderedProducts(string buyerId, int page);
+        Task<Paginator<ListOrderedProductViewModel[]>> GetOrderedProducts(string buyerId, int page);
+
+        Task<Paginator<SoldProductViewModel[]>> GetSoldProducts(string sellerId, int page);
     }
 }

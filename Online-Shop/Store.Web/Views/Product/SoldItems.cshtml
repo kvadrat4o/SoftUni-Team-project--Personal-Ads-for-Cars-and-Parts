@@ -1,0 +1,58 @@
+﻿@model Paginator<SoldProductViewModel[]>
+
+@{
+    ViewData["Title"] = Model.PageTitle;
+}
+
+<h2>@Model.PageTitle</h2>
+
+@await Html.PartialAsync("_Pagination")
+
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Title</th>
+            <th>Condition</th>
+            <th>Single Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Order Date</th>
+            <th>Buyer</th>
+            <th>Days Passed</th>
+            <th>Dispatch</th>
+            <th>Shipping Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Model)
+        {
+            <tr>
+                <td width="10%"><img src="@item.PicturePath" class="img-responsive img-thumbnail"></td>
+                <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" asp-route-title="@item.Title">@item.Title</a></td>
+                <td>@(item.IsNew ? "New" : "Second hand")</td>
+                <td>@string.Format("{0:C2}", item.ProductPrice)</td>
+                <td>@item.Quantity</td>
+                <td>@string.Format("{0:C2}", item.ProductPrice * item.Quantity)</td>
+                <td>@item.OrderDate.ToShortDateString()</td>
+                <td><a asp-controller="User" asp-action="Details" asp-route-userId="@item.BuyerId" class="btn-link small">@item.BuyerUserName</a></td>
+                <td>@DateTime.Now.Subtract(item.OrderDate).Days</td>
+                <td>
+                    @if (item.DispatchDate == null)
+                    {
+                        <a asp-controller="Product" asp-action="Dispatch" asp-route-id="@item.ProductId" class="btn btn-primary">Dispatch</a>
+                    }
+                    else
+                    {
+                        @item.DispatchDate.Value.ToShortDateString()
+                    }
+                </td>
+                <td>
+                    @item.BuyerName
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@await Html.PartialAsync("_Pagination")

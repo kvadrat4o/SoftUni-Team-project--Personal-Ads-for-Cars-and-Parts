@@ -12,8 +12,7 @@
         public User Buyer { get; set; }
 
         public decimal TotalValue => this.InvoiceProducts
-            .Select(ip => ip.Product.Price * ip.Quantity)
-            .Sum();
+            .Sum(ip => ip.Product.Price * ip.Quantity);
 
         public decimal NetValue => this.TotalValue * (1 - ModelConstants.VAT / 100);
 

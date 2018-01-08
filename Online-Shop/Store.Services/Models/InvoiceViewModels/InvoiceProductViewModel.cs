@@ -29,7 +29,7 @@
                 .ForMember(p => p.Id, options => options.MapFrom(p => p.Product.Id))
                 .ForMember(p => p.Title, options => options.MapFrom(p => p.Product.Title))
                 .ForMember(p => p.Price, options => options.MapFrom(p => p.Product.Price))
-                .ForMember(p => p.PicturePath, options => options.MapFrom(p => p.Product.PicturePath))
+                .ForMember(p => p.PicturePath, options => options.MapFrom(p => p.Product.PicturePath ?? ServiceConstants.DefaultProductImage))
                 .ForMember(p => p.IsNew, options => options.MapFrom(p => p.Product.IsNew))
                 .ForMember(p => p.SellerId, options => options.MapFrom(p => p.Product.SellerId));
         }

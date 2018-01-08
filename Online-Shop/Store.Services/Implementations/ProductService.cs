@@ -15,8 +15,8 @@
 
     public class ProductService : IProductService
     {
-        private StoreDbContext db;
-        private UserManager<User> userManager;
+        private readonly StoreDbContext db;
+        private readonly UserManager<User> userManager;
 
         public ProductService(StoreDbContext db,
             UserManager<User> userManager)
@@ -165,27 +165,53 @@
             .ProjectTo<TModel>()
             .ToList();
 
-        public Paginator<ListOrderedProductViewModel[]> GetOrderedProducts(string buyerId, int page)
+        public async Task<Paginator<ListOrderedProductViewModel[]>> GetOrderedProducts(string buyerId, int page)
         {
-            var products = this.db.ProductsInvoices
+            var products = await this.db.ProductsInvoices
                 .Where(pi => pi.Invoice.BuyerId == buyerId && pi.Invoice.IsPayed)
                 .OrderByDescending(pi => pi.Invoice.IssueDate)
                 .ProjectTo<ListOrderedProductViewModel>()
                 .Skip((page - 1) * ServiceConstants.PageSize)
                 .Take(ServiceConstants.PageSize)
-                .ToArray();
+                .ToArrayAsync();
 
+            var orderedProductsCount = await this.db.Invoices
+                    .Where(i => i.BuyerId == buyerId && i.IsPayed)
+                    .SelectMany(i => i.InvoiceProducts)
+                    .CountAsync();
 
             var paginator = new Paginator<ListOrderedProductViewModel[]>
             {
                 PageTitle = "Ordered Products",
                 Model = products,
                 CurrentPage = page,
-                PagesCount = products.Length,
-                AllPages = (int)Math.Ceiling(this.db.Invoices
-                    .Where(i => i.BuyerId == buyerId && i.IsPayed)
-                    .SelectMany(i => i.InvoiceProducts)
-                    .Count() * 1.0 / ServiceConstants.PageSize)
+                AllPages = (int)Math.Ceiling(orderedProductsCount * 1.0 / ServiceConstants.PageSize)
+            };
+
+            return paginator;
+        }
+
+        public async Task<Paginator<SoldProductViewModel[]>> GetSoldProducts(string sellerId, int page)
+        {
+            var model = await this.db.ShippingRecords
+                .ProjectTo<SoldProductViewModel>()
+                .Where(m => m.SellerId == sellerId)
+                .OrderByDescending(m => m.OrderDate)
+                .Skip((page - 1) * ServiceConstants.PageSize)
+                .Take(ServiceConstants.PageSize)
+                .ToArrayAsync();
+
+            var soldProductsCount = await this.db.ShippingRecords
+                .ProjectTo<SoldProductViewModel>()
+                .Where(m => m.SellerId == sellerId)
+                .CountAsync();
+
+            var paginator = new Paginator<SoldProductViewModel[]>
+            {
+                PageTitle = "Sold Items",
+                Model = model,
+                CurrentPage = page,
+                AllPages = (int)Math.Ceiling(soldProductsCount * 1.0 / ServiceConstants.PageSize)
             };
 
             return paginator;

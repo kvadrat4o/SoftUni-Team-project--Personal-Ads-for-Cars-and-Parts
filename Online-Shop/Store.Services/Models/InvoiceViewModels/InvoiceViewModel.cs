@@ -1,10 +1,12 @@
 ﻿namespace Store.Services.Models.InvoiceViewModels
 {
     using AutoMapper;
+    using Store.Data;
     using Store.Data.Models;
     using Store.Helpers.Interfaces.Mapping;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class InvoiceViewModel : IMapFrom<Invoice>, IHaveCustomMapping
     {
@@ -24,15 +26,15 @@
 
         public string BuyeerCountry { get; set; }
 
-        public decimal TotalValue { get; set; }
-
-        public decimal NetValue { get; set; }
-
         public bool IsPayed { get; set; }
 
         public DateTime IssueDate { get; set; }
 
         public ICollection<InvoiceProductViewModel> Products { get; set; } = new HashSet<InvoiceProductViewModel>();
+
+        public decimal TotalValue => this.Products.Sum(p => p.Price * p.Quantity);
+
+        public decimal NetValue => this.TotalValue * (1 - ModelConstants.VAT / 100);
 
         public void ConfigureMapping(Profile mapper)
         {

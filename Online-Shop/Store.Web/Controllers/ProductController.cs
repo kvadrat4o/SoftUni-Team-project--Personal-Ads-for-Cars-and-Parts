@@ -210,7 +210,7 @@
             return RedirectToAction("Pay", "Invoice", new { id = invoice.Id });
         }
 
-        public IActionResult ListOrders(int page = 1)
+        public async Task<IActionResult> ListOrders(int page = 1)
         {
             if (page <= 0)
             {
@@ -218,8 +218,23 @@
             }
 
             var userId = this.userManager.GetUserId(User);
-            var paginator = this.productService.GetOrderedProducts(userId, page);
+            var paginator = await this.productService.GetOrderedProducts(userId, page);
             paginator.ActionName = nameof(ListOrders);
+
+            return View(paginator);
+        }
+
+        public async Task<IActionResult> SoldItems(int page = 1)
+        {
+            if (page <= 0)
+            {
+                return BadRequest();
+            }
+
+            var sellerId = this.userManager.GetUserId(User);
+
+            var paginator = await this.productService.GetSoldProducts(sellerId, page);
+            paginator.ActionName = nameof(SoldItems);
 
             return View(paginator);
         }
