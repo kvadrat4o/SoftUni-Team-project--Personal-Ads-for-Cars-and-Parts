@@ -101,11 +101,17 @@
 
         public async Task<IActionResult> AddProduct(int productId, int quantity)
         {
+            var userId = this.userManager.GetUserId(User);
             var product = await this.productService.GetProductAsync(productId);
             if (product == null)
             {
-                TempData[WebConstants.DangerMessageKey] = "Thes product does not exists";
+                TempData[WebConstants.DangerMessageKey] = "Thes product does not exists!";
                 return RedirectToAction("Index", "Home");
+            }
+            else if (product.SellerId == userId)
+            {
+                TempData[WebConstants.WarningMessageKey] = "You can not add your own products!";
+                return RedirectToAction("Details", "Product", new { id = productId, title = product.Title });
             }
             else if (product.Quantity == 0)
             {
@@ -123,7 +129,6 @@
                 return RedirectToAction("Details", "Product", new { id = productId, title = product.Title });
             }
 
-            var userId = this.userManager.GetUserId(User);
             var invoice = await this.invoiceService.AddProductAsync(product, userId, quantity);
 
             return RedirectToAction(nameof(Details), new { id = invoice.Id });
