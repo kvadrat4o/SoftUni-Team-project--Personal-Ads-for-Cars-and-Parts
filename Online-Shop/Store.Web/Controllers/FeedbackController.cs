@@ -9,34 +9,48 @@ using System.Threading.Tasks;
 using System;
 using Store.Services.Models.FeedbackViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Store.Services.Models.ProductViewModels;
 
 namespace Store.Web.Controllers
 {
     public class FeedbackController : Controller
     {
         private readonly UserManager<User> userManager;
+        private readonly IProductService productService;
         private readonly IFeedbackService feedbackService;
 
         public FeedbackController(UserManager<User> userManager,
-            IFeedbackService feedbackService)
+            IFeedbackService feedbackService,
+            IProductService productService)
         {
             this.userManager = userManager;
             this.feedbackService = feedbackService;
+            this.productService = productService;
         }
 
         [HttpGet]
-        public IActionResult Create(string receiverId, int productId)
+        public async Task<IActionResult> Create(string receiverId, int productId)
         {
             var loggedUserId = this.userManager.GetUserId(User);
 
-            var model = new CreateFeedbackViewModel
+            if (loggedUserId != receiverId)
             {
-                SenderId = loggedUserId,
-                ReceiverId = receiverId,
-                ProductId = productId
-            };
 
-            return View(nameof(Create), model);
+                var feedback = new CreateFeedbackViewModel
+                {
+                    SenderId = loggedUserId,
+                    ReceiverId = receiverId,
+                    ProductId = productId
+                };
+
+                return View(nameof(Create), feedback);
+            }
+            else
+            {
+                TempData[WebConstants.WarningMessageKey] = "You cannot post feedback for your own products!";
+                var product = await this.productService.GetProductAsync<ProductDetailsViewModel>(productId);
+                return RedirectToAction("Details", "Product", product);
+            }
         }
 
         [HttpPost]

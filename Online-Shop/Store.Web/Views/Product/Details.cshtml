@@ -39,10 +39,15 @@
         </form>
     </div>
 </div>
-
+@if (Model.PartNumber != null)
+{
 <h3>PartNumber: <strong>@Model.PartNumber</strong></h3>
+}
+@if (Model.Description != null)
+{
 <h3 class="text-center">Description:</h3>
 <p>@Model.Description</p>
+}
 <br />
 <a asp-controller="User" asp-action="ProductsForSale" asp-route-sellerId="@Model.SellerId">All Products </a><small class="small">by this seller</small>
 <br />
