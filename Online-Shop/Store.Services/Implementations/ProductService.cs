@@ -119,7 +119,45 @@
             .ProjectTo<ProductDetailsViewModel>()
             .ToArray();
 
-        public List<Product> AllProductsForSale(string userId) => this.db.Products.Where(p => p.SellerId != userId).ToList();
+        public async Task<Paginator<CatalogProductViewModel[]>> AllProductsForSale(int page, Category? category)
+        {
+            var paginator = new Paginator<CatalogProductViewModel[]> { CurrentPage = page };
+
+            if (category == null)
+            {
+                paginator.PageTitle = "Catalog";
+
+                paginator.Model = await this.db.Products
+                    .ProjectTo<CatalogProductViewModel>()
+                    .Skip((page - 1) * ServiceConstants.PageSize)
+                    .Take(ServiceConstants.PageSize)
+                    .ToArrayAsync();
+
+                var productsCount = await this.db.Products
+                    .CountAsync();
+                paginator.AllPages = (int)Math.Ceiling(productsCount * 1.0 / ServiceConstants.PageSize);
+            }
+            else
+            {
+                paginator.PageTitle = $"{category.Value.ToString()} catalog:";
+
+                paginator.Model = await this.db.Products
+                    .ProjectTo<CatalogProductViewModel>()
+                    .Where(p => p.Category == category.Value)
+                    .Skip((page - 1) * ServiceConstants.PageSize)
+                    .Take(ServiceConstants.PageSize)
+                    .ToArrayAsync();
+
+                var productsCount = await this.db.Products
+                    .Where(p => p.Category == category.Value)
+                    .CountAsync();
+                paginator.AllPages = (int)Math.Ceiling(productsCount * 1.0 / ServiceConstants.PageSize);
+
+                paginator.Category = category.Value;
+            }
+
+            return paginator;
+        }
 
         private async Task SetChangedValuesAsync(Product productToEdit, EditProductViewModel newProductData)
         {

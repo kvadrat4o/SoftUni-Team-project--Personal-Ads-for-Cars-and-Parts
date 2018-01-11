@@ -126,7 +126,15 @@
             return View(nameof(Details), model);
         }
 
-        public async Task<IActionResult> Search(string title)
+        public async Task<IActionResult> ProductsForSale(int page = 1, Category? category = null)
+        {
+            var paginator = await this.productService.AllProductsForSale(page, category);
+            paginator.ActionName = nameof(ProductsForSale);
+
+            return View(paginator);
+        }
+
+            public async Task<IActionResult> Search(string title)
         {
             var product = await this.productService.GetProductAsync<ProductDetailsViewModel>(title);
             if (product == null)
@@ -135,27 +143,6 @@
             }
 
             return View(nameof(Details), product);
-        }
-
-        public IActionResult ProductsForSale()
-        {
-            var userId = this.userManager.GetUserId(User);
-            var products = this.productService.AllProductsForSale(userId);
-
-            var mapped = new List<CatalogProductViewModel>();
-
-            foreach (var product in products)
-            {
-                mapped.Add(Mapper.Map<CatalogProductViewModel>(product));
-            }
-
-            return View(mapped);
-        }
-
-        public IActionResult ProductsByCategory(Category category)
-        {
-            var products = this.productService.ProductsByCategory<CatalogProductViewModel>(category);
-            return View(nameof(ProductsForSale), products);
         }
 
         public IActionResult SearchProductByTitle(string title)

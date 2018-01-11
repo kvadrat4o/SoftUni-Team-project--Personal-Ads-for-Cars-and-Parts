@@ -28,7 +28,7 @@
 
         ProductDetailsViewModel[] ProductsBySeller(string sellerId);
 
-        List<Product> AllProductsForSale(string userId);
+        Task<Paginator<CatalogProductViewModel[]>> AllProductsForSale(int page, Category? category);
 
         List<TModel> ProductsByCategory<TModel>(Category category);
 

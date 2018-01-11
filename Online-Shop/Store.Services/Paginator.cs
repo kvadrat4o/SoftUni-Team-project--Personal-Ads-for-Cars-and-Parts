@@ -1,5 +1,7 @@
 ﻿namespace Store.Services
 {
+    using Store.Data.Models.Enums;
+
     public class Paginator<TModel>
     {
         public string PageTitle { get; set; }
@@ -11,5 +13,7 @@
         public int AllPages { get; set; }
 
         public string ActionName { get; set; } = ServiceConstants.PaginationDefaultActionName;
+
+        public Category? Category { get; set; }
     }
 }
