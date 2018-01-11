@@ -62,6 +62,11 @@
             .ProjectTo<TModel>()
             .FirstOrDefaultAsync();
 
+        public async Task<TModel> GetProductAsync<TModel>(string title) => await db.Products
+            .Where(p => p.Title == title)
+            .ProjectTo<TModel>()
+            .FirstOrDefaultAsync();
+
         public async Task<Product> GetProductAsync(int id) => await db.Products
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync();
@@ -114,7 +119,7 @@
             .ProjectTo<ProductDetailsViewModel>()
             .ToArray();
 
-        public List<Product> AllProductsForSale() => this.db.Products.ToList();
+        public List<Product> AllProductsForSale(string userId) => this.db.Products.Where(p => p.SellerId != userId).ToList();
 
         private async Task SetChangedValuesAsync(Product productToEdit, EditProductViewModel newProductData)
         {

@@ -16,6 +16,8 @@
 
         Task<TModel> GetProductAsync<TModel>(int id);
 
+        Task<TModel> GetProductAsync<TModel>(string title);
+
         Task<Product> GetProductAsync(int id);
 
         Task<Product> GetProductAsync(int id, string sellerId);
@@ -26,7 +28,7 @@
 
         ProductDetailsViewModel[] ProductsBySeller(string sellerId);
 
-        List<Product> AllProductsForSale();
+        List<Product> AllProductsForSale(string userId);
 
         List<TModel> ProductsByCategory<TModel>(Category category);
 

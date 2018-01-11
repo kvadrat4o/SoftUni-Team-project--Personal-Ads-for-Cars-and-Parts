@@ -126,9 +126,21 @@
             return View(nameof(Details), model);
         }
 
+        public async Task<IActionResult> Search(string title)
+        {
+            var product = await this.productService.GetProductAsync<ProductDetailsViewModel>(title);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(nameof(Details), product);
+        }
+
         public IActionResult ProductsForSale()
         {
-            var products = this.productService.AllProductsForSale();
+            var userId = this.userManager.GetUserId(User);
+            var products = this.productService.AllProductsForSale(userId);
 
             var mapped = new List<CatalogProductViewModel>();
 
